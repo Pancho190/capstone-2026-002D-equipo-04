@@ -1,9 +1,9 @@
-# [Nombre del Proyecto]
+# Sistema Integrado de Captura Digital y Gestión de Prospectos para Admisión
 
 > Plantilla de README obligatorio — CAPSTONE 2026 (PTY4614). Reemplaza todo el texto entre corchetes y borra estas notas antes de entregar.
 
 ## 1. Descripción del proyecto
-[¿Qué hace la solución? ¿A quién va dirigida? ¿Qué problema resuelve?]
+Consiste en el desarrollo de una plataforma web progresiva (PWA) offline-first. El sistema utilizará la cámara del dispositivo móvil para escanear el código PDF417 y la zona MRZ de la cédula de identidad chilena, autocompletando instantáneamente el RUT, nombre y fecha de nacimiento del prospecto. Al recuperar la conectividad a internet, los datos capturados se sincronizarán automáticamente con la base de datos central.
 
 ## 2. Tecnologías utilizadas
 - **Lenguajes:** [ej. Python, JavaScript]
@@ -28,9 +28,9 @@ docker compose up --build
 ## 4. Integrantes del equipo y roles
 | Integrante | Rol |
 |---|---|
-| [Apellido, Nombre] | [ej. Líder de proyecto / Backend] |
-| [Apellido, Nombre] | [ej. Frontend / QA] |
-| [Apellido, Nombre] | [ej. Base de datos / DevOps] |
+| [Briones, Cristian] | [Líder de proyecto / Backend] |
+| [Silva, Francisco] | [Frontend / QA] |
+| [Gatillon, Ignacio] | [Base de datos / DevOps] |
 
 ## 5. Metodología de trabajo
 [Scrum / Kanban / DevOps. Explica ceremonias, tablero y herramienta usada.]
