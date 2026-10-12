@@ -23,7 +23,6 @@ cp docker/.env.example .env
 # 3. Levantar el sistema con Docker
 docker compose up --build
 ```
-[Detalla puertos, credenciales de prueba y cómo acceder a la app.]
 
 ## 4. Integrantes del equipo y roles
 | Integrante | Rol |
@@ -33,13 +32,13 @@ docker compose up --build
 | [Gatillon, Ignacio] | [Base de datos / DevOps] |
 
 ## 5. Metodología de trabajo
-[Scrum / Kanban / DevOps. Explica ceremonias, tablero y herramienta usada.]
+
 
 ## 6. Arquitectura de la solución
-[Descripción o diagrama de arquitectura. Puedes enlazar la imagen en /docs.]
+
 
 ---
 ### Sección de innovación (documento de cierre)
-- **¿Qué problema resuelve?** [respuesta]
-- **¿Qué hace diferente a la solución?** [respuesta]
-- **¿Qué valor agrega?** [respuesta]
+- **¿Qué problema resuelve?** 
+- **¿Qué hace diferente a la solución?** 
+- **¿Qué valor agrega?** 
