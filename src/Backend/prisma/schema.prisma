@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model UsuarioAdmision {
+  id              String      @id @default(uuid())
+  rut             String      @unique
+  nombre_completo String
+  correo          String      @unique
+  password_hash   String
+  rol             String      @default("Anfitrion")
+  fecha_creacion  DateTime    @default(now())
+  prospectos      Prospecto[]
+}
+
+model Sede {
+  id        String    @id @default(uuid())
+  nombre    String
+  region    String
+  prospectos Prospecto[]
+}
+
+model Carrera {
+  id         String      @id @default(uuid())
+  nombre     String
+  escuela    String
+  prospectos Prospecto[]
+}
+
+model Evento {
+  id           String      @id @default(uuid())
+  nombre       String
+  fecha_inicio DateTime
+  fecha_fin    DateTime
+  ubicacion    String
+  prospectos   Prospecto[]
+}
+
+model Prospecto {
+  id               String   @id @default(uuid())
+  rut              String
+  nombres          String
+  apellidos        String?
+  fecha_nacimiento DateTime?
+  correo           String?
+  telefono         String?
+
+  // Relaciones
+  evento_id        String
+  evento           Evento   @relation(fields: [evento_id], references: [id])
+
+  usuario_id       String
+  usuario          UsuarioAdmision @relation(fields: [usuario_id], references: [id])
+
+  carrera_id       String?
+  carrera          Carrera? @relation(fields: [carrera_id], references: [id])
+
+  sede_id          String?
+  sede             Sede?    @relation(fields: [sede_id], references: [id])
+
+  fecha_captura    DateTime @default(now())
+
+  @@unique([rut, evento_id]) // Evita que la misma persona se registre dos veces en el mismo evento
+}
