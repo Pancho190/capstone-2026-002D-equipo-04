@@ -1,4 +1,3 @@
-// src/Backend/controllers/authController.js
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -8,31 +7,45 @@ const prisma = new PrismaClient();
 // Registrar usuario/anfitrión
 const registrarUsuario = async (req, res) => {
   try {
-    const { email, password, nombre, rol, sedeId } = req.body;
+    // 1. Extraemos correctamente todas las propiedades del body
+    const { email, password, nombre, rol, rut } = req.body;
 
-    // Verificar si el usuario ya existe
-    const usuarioExistente = await prisma.usuarioAdmision.findUnique({ where: { email } });
+    // 2. Validamos si el rut está presente antes de usarlo
+    if (!rut) {
+      return res.status(400).json({ error: 'El campo rut es obligatorio.' });
+    }
+
+    // 3. Verificar si el usuario ya existe por su correo
+    const usuarioExistente = await prisma.usuarioAdmision.findUnique({ 
+      where: { correo: email } 
+    });
+    
     if (usuarioExistente) {
       return res.status(400).json({ error: 'El usuario ya se encuentra registrado.' });
     }
 
-    // Encriptar contraseña
+    // 4. Encriptar contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Crear usuario en base de datos
+    // 5. Crear usuario en la base de datos
     const nuevoUsuario = await prisma.usuarioAdmision.create({
       data: {
-        email,
-        password: hashedPassword,
-        nombre,
+        correo: email,
+        password_hash: hashedPassword,
+        nombre_completo: nombre,
         rol: rol || 'CAPTADOR',
-        sedeId: sedeId ? parseInt(sedeId) : null
+        rut: rut
       }
     });
 
     res.status(201).json({
       mensaje: 'Usuario creado exitosamente',
-      usuario: { id: nuevoUsuario.id, email: nuevoUsuario.email, nombre: nuevoUsuario.nombre }
+      usuario: { 
+        id: nuevoUsuario.id, 
+        correo: nuevoUsuario.correo, 
+        nombre: nuevoUsuario.nombre_completo,
+        rut: nuevoUsuario.rut 
+      }
     });
   } catch (error) {
     console.error('Error al registrar usuario:', error);
@@ -45,19 +58,18 @@ const loginUsuario = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const usuario = await prisma.usuarioAdmision.findUnique({ where: { email } });
+    const usuario = await prisma.usuarioAdmision.findUnique({ where: { correo: email } });
     if (!usuario) {
       return res.status(401).json({ error: 'Credenciales inválidas.' });
     }
 
-    const passwordValido = await bcrypt.compare(password, usuario.password);
+    const passwordValido = await bcrypt.compare(password, usuario.password_hash);
     if (!passwordValido) {
       return res.status(401).json({ error: 'Credenciales inválidas.' });
     }
 
-    // Generar Token JWT (duración 12h para jornadas de admisión)
     const token = jwt.sign(
-      { id: usuario.id, email: usuario.email, rol: usuario.rol },
+      { id: usuario.id, correo: usuario.correo, rol: usuario.rol },
       process.env.JWT_SECRET || 'secreto_fallback',
       { expiresIn: '12h' }
     );
@@ -65,7 +77,7 @@ const loginUsuario = async (req, res) => {
     res.json({
       mensaje: 'Inicio de sesión exitoso',
       token,
-      usuario: { id: usuario.id, email: usuario.email, nombre: usuario.nombre, rol: usuario.rol }
+      usuario: { id: usuario.id, correo: usuario.correo, nombre: usuario.nombre_completo, rol: usuario.rol }
     });
   } catch (error) {
     console.error('Error en login:', error);
