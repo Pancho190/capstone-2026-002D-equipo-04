@@ -1,4 +1,4 @@
-import { verify } from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 
 const verificarToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -6,18 +6,18 @@ const verificarToken = (req, res, next) => {
     return res.status(401).json({ error: 'Acceso denegado. Token no proporcionado.' });
   }
 
-  const token = authHeader.split(' ')[1]; // Formato: "Bearer TOKEN"
+  const token = authHeader.split(' ')[1];
   if (!token) {
     return res.status(401).json({ error: 'Token malformado.' });
   }
 
   try {
-    const verified = verify(token, process.env.JWT_SECRET || 'secreto_fallback');
-    req.usuario = verified; // Guardamos los datos del usuario decodificados en la petición
+    const verified = jwt.verify(token, process.env.JWT_SECRET || 'secreto_fallback');
+    req.usuario = verified;
     next();
   } catch (error) {
     res.status(403).json({ error: 'Token inválido o expirado.' });
   }
 };
 
-export default { verificarToken };
+module.exports = { verificarToken };
