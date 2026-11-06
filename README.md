@@ -4,10 +4,10 @@
 Consiste en el desarrollo de una plataforma web progresiva (PWA) offline-first. El sistema utilizará la cámara del dispositivo móvil para escanear el código PDF417 y la zona MRZ de la cédula de identidad chilena, autocompletando instantáneamente el RUT, nombre y fecha de nacimiento del prospecto. Al recuperar la conectividad a internet, los datos capturados se sincronizarán automáticamente con la base de datos central.
 
 ## 2. Tecnologías utilizadas
-- **Lenguajes:** [ej. Python, JavaScript]
-- **Frameworks: React
-- **Base de datos: PostgreSQL
-- **Cloud / Infraestructura: Docker
+- Lenguajes:** [ej. Python, JavaScript]
+- Frameworks: React
+- Base de datos: PostgreSQL
+- Cloud / Infraestructura: Docker
 
 ## 3. Instrucciones para ejecutar el proyecto localmente
 ```bash
