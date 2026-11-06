@@ -1,40 +1,62 @@
-
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+// Registrar un nuevo prospecto (Captura en terreno)
 const crearProspecto = async (req, res) => {
   try {
-    const { rut, nombre_completo, correo, telefono, carreraId, eventoId } = req.body;
+    const { rut, nombre_completo, apellidos, correo, telefono, carrera_id, evento_id, sede_id } = req.body;
     
-    // Obtenemos el ID del usuario desde el token decodificado
-    const usuarioId = req.usuario?.id || req.usuario?.userId;
+    // Obtenemos el ID del usuario desde el token JWT decodificado
+    const usuario_id = req.usuario?.id;
 
-    if (!rut || !nombre_completo || !correo) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios para registrar el prospecto.' });
+    if (!usuario_id) {
+      return res.status(401).json({ error: 'Usuario no identificado en el token.' });
     }
 
+    // Validar campos obligatorios
+    if (!rut || !nombre_completo) {
+      return res.status(400).json({ error: 'El RUT y el nombre completo son obligatorios.' });
+    }
+
+    // Verificar si el prospecto ya existe por RUT o correo
     const prospectoExistente = await prisma.prospecto.findFirst({
       where: {
-        OR: [{ rut }, { correo }]
+        OR: [
+          { rut },
+          ...(correo ? [{ correo }] : [])
+        ]
       }
     });
 
     if (prospectoExistente) {
-      return res.status(400).json({ error: 'El prospecto ya se encuentra registrado en el sistema.' });
+      return res.status(400).json({ error: 'El prospecto con este RUT o correo ya se encuentra registrado.' });
     }
 
-    // Creación limpia utilizando la llave foránea directa 'usuarioAdmisionId'
-    const nuevoProspecto = await prisma.prospecto.create({
-      data: {
-        rut,
-        nombre_completo,
-        nombres: nombre_completo,
-        correo,
-        telefono: telefono || null,
-        carreraId: carreraId ? parseInt(carreraId) : null,
-        eventoId: eventoId ? parseInt(eventoId) : null,
-        usuarioAdmisionId: parseInt(usuarioId)
+    // Construir la estructura de datos exactamente como está en schema.prisma
+    const dataProspecto = {
+      rut,
+      nombre_completo, // <- Único campo de nombre en tu esquema actual
+      apellidos: apellidos || null,
+      correo: correo || null,
+      telefono: telefono || null,
+      usuario: {
+        connect: { id: usuario_id }
       }
+    };
+
+    // Conectar relaciones opcionales únicamente si se proporcionan
+    if (evento_id) {
+      dataProspecto.evento = { connect: { id: evento_id } };
+    }
+    if (carrera_id) {
+      dataProspecto.carrera = { connect: { id: carrera_id } };
+    }
+    if (sede_id) {
+      dataProspecto.sede = { connect: { id: sede_id } };
+    }
+
+    const nuevoProspecto = await prisma.prospecto.create({
+      data: dataProspecto
     });
 
     res.status(201).json({
@@ -42,20 +64,22 @@ const crearProspecto = async (req, res) => {
       prospecto: nuevoProspecto
     });
   } catch (error) {
-    console.error('Error detallado al registrar prospecto:', error);
+    console.error('Error al registrar prospecto:', error);
     res.status(500).json({ error: 'Error interno del servidor al registrar el prospecto.' });
   }
 };
 
+// Listar todos los prospectos capturados
 const obtenerProspectos = async (req, res) => {
   try {
     const prospectos = await prisma.prospecto.findMany({
       include: {
-        usuarioAdmision: { select: { nombre_completo: true, correo: true } },
+        usuario: { select: { nombre_completo: true, correo: true } },
         carrera: true,
-        evento: true
+        evento: true,
+        sede: true
       },
-      orderBy: { fecha_registro: 'desc' }
+      orderBy: { fecha_captura: 'desc' }
     });
 
     res.json(prospectos);
