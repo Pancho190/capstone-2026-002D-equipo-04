@@ -18,7 +18,9 @@ git clone https://github.com/Pancho190/capstone-2026-002D-equipo-04.git
 cp docker/.env.example .env
 
 # 3. Levantar el sistema con Docker
-docker compose up --build
+docker compose up -d
+npx prisma db push
+npx prisma generate
 ```
 
 ## 4. Integrantes del equipo y roles
