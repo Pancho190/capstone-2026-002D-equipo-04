@@ -5,15 +5,14 @@ Consiste en el desarrollo de una plataforma web progresiva (PWA) offline-first. 
 
 ## 2. Tecnologías utilizadas
 - **Lenguajes:** [ej. Python, JavaScript]
-- **Frameworks:** [ej. Django / React / Spring Boot]
-- **Base de datos:** [ej. PostgreSQL / MongoDB]
-- **Cloud / Infraestructura:** [ej. AWS / Azure / Docker]
+- **Frameworks: React
+- **Base de datos: PostgreSQL
+- **Cloud / Infraestructura: Docker
 
 ## 3. Instrucciones para ejecutar el proyecto localmente
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/nombre-del-proyecto.git
-cd nombre-del-proyecto
+git clone https://github.com/Pancho190/capstone-2026-002D-equipo-04.git
 
 # 2. Variables de entorno (copiar el ejemplo y completar)
 cp docker/.env.example .env

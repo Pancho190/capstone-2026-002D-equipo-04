@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+import { verify } from 'jsonwebtoken';
 
 const verificarToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -12,7 +12,7 @@ const verificarToken = (req, res, next) => {
   }
 
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET || 'secreto_fallback');
+    const verified = verify(token, process.env.JWT_SECRET || 'secreto_fallback');
     req.usuario = verified; // Guardamos los datos del usuario decodificados en la petición
     next();
   } catch (error) {
@@ -20,4 +20,4 @@ const verificarToken = (req, res, next) => {
   }
 };
 
-module.exports = { verificarToken };
+export default { verificarToken };
