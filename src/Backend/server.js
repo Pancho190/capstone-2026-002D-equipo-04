@@ -16,7 +16,7 @@ app.use('/api/prospectos', prospectoRoutes);
 
 // Ruta de prueba para verificar el backend
 app.get('/', (req, res) => {
-  res.json({ mensaje: '¡Servidor del Capstone Backend funcionando al 100%! 🚀' });
+  res.json({ mensaje: '¡Servidor del Capstone Backend funcionando al 100%!' });
 });
 
 // Rutas de la API

@@ -1,18 +1,18 @@
+
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Registrar un nuevo prospecto (Captura en terreno)
 const crearProspecto = async (req, res) => {
   try {
     const { rut, nombre_completo, correo, telefono, carreraId, eventoId } = req.body;
-    const usuarioAdmisionId = req.usuario.id; // Obtenido del token JWT del captador autenticado
+    
+    // Obtenemos el ID del usuario desde el token decodificado
+    const usuarioId = req.usuario?.id || req.usuario?.userId;
 
-    // Validar campos obligatorios mínimos
     if (!rut || !nombre_completo || !correo) {
       return res.status(400).json({ error: 'Faltan campos obligatorios para registrar el prospecto.' });
     }
 
-    // Verificar si el prospecto ya existe por RUT o correo
     const prospectoExistente = await prisma.prospecto.findFirst({
       where: {
         OR: [{ rut }, { correo }]
@@ -23,16 +23,17 @@ const crearProspecto = async (req, res) => {
       return res.status(400).json({ error: 'El prospecto ya se encuentra registrado en el sistema.' });
     }
 
-    // Crear el prospecto vinculado al usuario que lo capturó
+    // Creación limpia utilizando la llave foránea directa 'usuarioAdmisionId'
     const nuevoProspecto = await prisma.prospecto.create({
       data: {
         rut,
         nombre_completo,
+        nombres: nombre_completo,
         correo,
-        telefono,
+        telefono: telefono || null,
         carreraId: carreraId ? parseInt(carreraId) : null,
         eventoId: eventoId ? parseInt(eventoId) : null,
-        usuarioAdmisionId: parseInt(usuarioAdmisionId)
+        usuarioAdmisionId: parseInt(usuarioId)
       }
     });
 
@@ -41,12 +42,11 @@ const crearProspecto = async (req, res) => {
       prospecto: nuevoProspecto
     });
   } catch (error) {
-    console.error('Error al registrar prospecto:', error);
+    console.error('Error detallado al registrar prospecto:', error);
     res.status(500).json({ error: 'Error interno del servidor al registrar el prospecto.' });
   }
 };
 
-// Listar todos los prospectos capturados
 const obtenerProspectos = async (req, res) => {
   try {
     const prospectos = await prisma.prospecto.findMany({
