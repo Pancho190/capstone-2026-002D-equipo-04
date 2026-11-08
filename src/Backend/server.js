@@ -26,7 +26,10 @@ app.get('/', (req, res) => {
 // Rutas de la API
 app.use('/api/auth', authRoutes);
 
-app.listen(PORT, () => {
-  console.log(`[Servidor] Escuchando en el puerto http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`[Servidor] Escuchando en el puerto http://localhost:${PORT}`);
+  });
+}
 
+module.exports = app;
