@@ -46,7 +46,10 @@ const registrarUsuario = async (req, res) => {
         rut: nuevoUsuario.rut
       }
     });
-  } catch (error) {
+    } catch (error) {
+    if (error.code === 'P2002') {
+      return res.status(409).json({ error: 'El usuario ya se encuentra registrado.' });
+    }
     console.error('Error al registrar usuario:', error);
     res.status(500).json({ error: 'Error interno del servidor al registrar usuario.' });
   }
