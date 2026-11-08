@@ -15,8 +15,8 @@ const verificarToken = (req, res, next) => {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.usuario = verified;
     next();
-  } catch (error) {
-    res.status(403).json({ error: 'Token inválido o expirado.' });
+    } catch (error) {
+    return res.status(403).json({ error: 'Token inválido o expirado.' });
   }
 };
 
