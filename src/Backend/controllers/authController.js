@@ -33,7 +33,7 @@ const registrarUsuario = async (req, res) => {
         correo: email,
         password_hash: hashedPassword,
         nombre_completo: nombre,
-        rol: rol || 'CAPTADOR',
+        rol: 'CAPTADOR',
         rut: rut
       }
     });
