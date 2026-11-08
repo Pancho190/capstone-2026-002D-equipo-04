@@ -71,7 +71,13 @@ const crearProspecto = async (req, res) => {
 // Listar todos los prospectos capturados
 const obtenerProspectos = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
     const prospectos = await prisma.prospecto.findMany({
+      skip,
+      take: limit,
       include: {
         usuario: { select: { nombre_completo: true, correo: true } },
         carrera: true,
