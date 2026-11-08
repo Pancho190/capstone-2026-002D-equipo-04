@@ -59,7 +59,10 @@ const crearProspecto = async (req, res) => {
       mensaje: 'Prospecto capturado y guardado exitosamente',
       prospecto: nuevoProspecto
     });
-    } catch (error) {
+      } catch (error) {
+    if (error.code === 'P2003' || error.code === 'P2025') {
+      return res.status(400).json({ error: 'ID de relación inválido (carrera, evento o sede).' });
+    }
     if (error.code === 'P2002') {
       return res.status(409).json({ error: 'El prospecto ya se encuentra registrado.' });
     }
