@@ -15,6 +15,10 @@ const crearProspecto = async (req, res) => {
     if (!rut || !nombre_completo) {
       return res.status(400).json({ error: 'El RUT y el nombre completo son obligatorios.' });
     }
+        const rutValido = /^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$/.test(rut);
+    if (!rutValido) {
+      return res.status(400).json({ error: 'Formato de RUT inválido.' });
+    }
 
         const prospectoExistente = await prisma.prospecto.findFirst({
       where: {
