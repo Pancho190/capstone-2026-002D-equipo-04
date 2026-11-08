@@ -59,7 +59,10 @@ const crearProspecto = async (req, res) => {
       mensaje: 'Prospecto capturado y guardado exitosamente',
       prospecto: nuevoProspecto
     });
-  } catch (error) {
+    } catch (error) {
+    if (error.code === 'P2002') {
+      return res.status(409).json({ error: 'El prospecto ya se encuentra registrado.' });
+    }
     console.error('Error al registrar prospecto:', error);
     res.status(500).json({ error: 'Error interno del servidor al registrar el prospecto.' });
   }
