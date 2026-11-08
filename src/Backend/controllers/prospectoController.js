@@ -16,10 +16,10 @@ const crearProspecto = async (req, res) => {
       return res.status(400).json({ error: 'El RUT y el nombre completo son obligatorios.' });
     }
 
-    const prospectoExistente = await prisma.prospecto.findFirst({
+        const prospectoExistente = await prisma.prospecto.findFirst({
       where: {
         OR: [
-          { rut },
+          evento_id ? { rut, evento_id } : { rut, evento_id: null },
           ...(correo ? [{ correo }] : [])
         ]
       }
