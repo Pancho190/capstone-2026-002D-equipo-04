@@ -14,6 +14,11 @@ const registrarUsuario = async (req, res) => {
       return res.status(400).json({ error: 'Faltan campos obligatorios.' });
     }
 
+    const rutValido = /^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$/.test(rut);
+    if (!rutValido) {
+      return res.status(400).json({ error: 'Formato de RUT inválido.' });
+    }
+
     // Verificar si el usuario ya existe por su correo
     const usuarioExistente = await prisma.usuarioAdmision.findUnique({
       where: { correo: email }
