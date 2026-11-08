@@ -4,21 +4,18 @@ const prisma = new PrismaClient();
 // Registrar un nuevo prospecto (Captura en terreno)
 const crearProspecto = async (req, res) => {
   try {
-    const { rut, nombre_completo, apellidos, correo, telefono, carrera_id, evento_id, sede_id } = req.body;
-    
-    // Obtenemos el ID del usuario desde el token JWT decodificado
+    const { rut, nombre_completo, apellidos, correo, telefono, carrera_id, evento_id, sede_id, fecha_nacimiento } = req.body;
+
     const usuario_id = req.usuario?.id;
 
     if (!usuario_id) {
       return res.status(401).json({ error: 'Usuario no identificado en el token.' });
     }
 
-    // Validar campos obligatorios
     if (!rut || !nombre_completo) {
       return res.status(400).json({ error: 'El RUT y el nombre completo son obligatorios.' });
     }
 
-    // Verificar si el prospecto ya existe por RUT o correo
     const prospectoExistente = await prisma.prospecto.findFirst({
       where: {
         OR: [
@@ -32,19 +29,18 @@ const crearProspecto = async (req, res) => {
       return res.status(400).json({ error: 'El prospecto con este RUT o correo ya se encuentra registrado.' });
     }
 
-    // Construir la estructura de datos exactamente como está en schema.prisma
     const dataProspecto = {
       rut,
-      nombre_completo, // <- Único campo de nombre en tu esquema actual
+      nombre_completo,
       apellidos: apellidos || null,
       correo: correo || null,
       telefono: telefono || null,
+      fecha_nacimiento: fecha_nacimiento ? new Date(fecha_nacimiento) : null,
       usuario: {
         connect: { id: usuario_id }
       }
     };
 
-    // Conectar relaciones opcionales únicamente si se proporcionan
     if (evento_id) {
       dataProspecto.evento = { connect: { id: evento_id } };
     }
