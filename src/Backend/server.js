@@ -6,6 +6,11 @@ const prospectoRoutes = require('./routes/prospectoRoutes');
 
 dotenv.config();
 
+if (!process.env.JWT_SECRET) {
+  console.error('Falta JWT_SECRET en .env');
+  process.exit(1);
+}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 

@@ -70,7 +70,7 @@ const loginUsuario = async (req, res) => {
 
     const token = jwt.sign(
       { id: usuario.id, correo: usuario.correo, rol: usuario.rol },
-      process.env.JWT_SECRET || 'secreto_fallback',
+      process.env.JWT_SECRET,
       { expiresIn: '12h' }
     );
 
