@@ -7,27 +7,26 @@ const prisma = new PrismaClient();
 // Registrar usuario/anfitrión
 const registrarUsuario = async (req, res) => {
   try {
-    // 1. Extraemos correctamente todas las propiedades del body
-    const { email, password, nombre, rol, rut } = req.body;
+    const { email, password, nombre, rut } = req.body;
 
-    // 2. Validamos si el rut está presente antes de usarlo
-    if (!rut) {
-      return res.status(400).json({ error: 'El campo rut es obligatorio.' });
+    // Validar campos obligatorios
+    if (!email || !password || !nombre || !rut) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios.' });
     }
 
-    // 3. Verificar si el usuario ya existe por su correo
-    const usuarioExistente = await prisma.usuarioAdmision.findUnique({ 
-      where: { correo: email } 
+    // Verificar si el usuario ya existe por su correo
+    const usuarioExistente = await prisma.usuarioAdmision.findUnique({
+      where: { correo: email }
     });
-    
+
     if (usuarioExistente) {
       return res.status(400).json({ error: 'El usuario ya se encuentra registrado.' });
     }
 
-    // 4. Encriptar contraseña
+    // Encriptar contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 5. Crear usuario en la base de datos
+    // Crear usuario en la base de datos
     const nuevoUsuario = await prisma.usuarioAdmision.create({
       data: {
         correo: email,
@@ -40,11 +39,11 @@ const registrarUsuario = async (req, res) => {
 
     res.status(201).json({
       mensaje: 'Usuario creado exitosamente',
-      usuario: { 
-        id: nuevoUsuario.id, 
-        correo: nuevoUsuario.correo, 
+      usuario: {
+        id: nuevoUsuario.id,
+        correo: nuevoUsuario.correo,
         nombre: nuevoUsuario.nombre_completo,
-        rut: nuevoUsuario.rut 
+        rut: nuevoUsuario.rut
       }
     });
   } catch (error) {
