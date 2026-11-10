@@ -18,16 +18,20 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: 'auto', padding: 20 }}>
-      <h2>Iniciar sesión</h2>
+    <div className="card">
+      <h2 style={{ marginBottom: '1rem', fontFamily: 'Lato, sans-serif' }}>Iniciar sesión</h2>
       <form onSubmit={handleSubmit}>
-        <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <br />
-        <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <br />
-        <button type="submit">Entrar</button>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input id="email" type="email" placeholder="tu@duoc.cl" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Contraseña</label>
+          <input id="password" type="password" placeholder="••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        </div>
+        <button type="submit" className="primary" style={{ width: '100%' }}>Entrar</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="msg error">{error}</p>}
     </div>
   );
 }
