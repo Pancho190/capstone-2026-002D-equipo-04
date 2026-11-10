@@ -49,8 +49,14 @@ model Prospecto {
   fecha_nacimiento DateTime?
   correo           String?
   telefono         String?
+  anio_curso       String?
+  region           String?
+  comuna           String?
+  identificacion   String?
+  escuela          String?
+  carrera_interes  String?
+  sede_preferencia String?
 
-  // Relaciones y campos opcionales (con '?')
   evento_id        String?
   evento           Evento?   @relation(fields: [evento_id], references: [id])
 
@@ -64,5 +70,5 @@ model Prospecto {
   sede             Sede?     @relation(fields: [sede_id], references: [id])
 
   fecha_captura    DateTime  @default(now())
-  @@unique([rut, evento_id]) // Evita que la misma persona se registre dos veces en el mismo evento
+  @@unique([rut, evento_id])
 }
