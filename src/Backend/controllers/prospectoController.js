@@ -3,8 +3,7 @@ const prisma = require('../lib/prisma');
 // Registrar un nuevo prospecto (Captura en terreno)
 const crearProspecto = async (req, res) => {
   try {
-    const { rut, nombre_completo, apellidos, correo, telefono, carrera_id, evento_id, sede_id, fecha_nacimiento } = req.body;
-
+   const { rut, nombre_completo, apellidos, correo, telefono, carrera_id, evento_id, sede_id, fecha_nacimiento, anio_curso, region, comuna, identificacion, escuela, carrera_interes, sede_preferencia } = req.body;
     const usuario_id = req.usuario?.id;
 
     if (!usuario_id) {
@@ -38,6 +37,13 @@ const crearProspecto = async (req, res) => {
       apellidos: apellidos || null,
       correo: correo || null,
       telefono: telefono || null,
+      anio_curso: anio_curso || null,
+      region: region || null,
+      comuna: comuna || null,
+      identificacion: identificacion || null,
+      escuela: escuela || null,
+      carrera_interes: carrera_interes || null,
+      sede_preferencia: sede_preferencia || null,
       fecha_nacimiento: fecha_nacimiento ? new Date(fecha_nacimiento) : null,
       usuario: {
         connect: { id: usuario_id }
