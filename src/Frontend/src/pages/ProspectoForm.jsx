@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import api from '../api';
 import { addPending, syncPending, getPending } from '../offline';
 import Scanner from '../components/Scanner';
@@ -200,13 +200,13 @@ export default function ProspectoForm() {
         <div className="form-row">
           <div className="form-group col-md-12">
             <label htmlFor="identificacion">De las siguientes afirmaciones, ¿Con cuál te sientes más identificado?</label>
-            <select id="identificacion" value={identificacion} onChange={(e) => setIdentificacion(e.target.value)}>
-              <option value="">Seleccione</option>
-              <option value="1">Estudiar es una inversión para aumentar mis ingresos y progresar en la vida, tanto yo como mi familia.</option>
-              <option value="2">Estudiar es seguir mi vocación para encontrar mi lugar en el mundo laboral. Los ingresos que recibiré no son lo central.</option>
-              <option value="3">Estudiar es una nueva oportunidad de retomar esa carrera que dejé pendiente, postergué, o de darme la posibilidad de comenzar otra nueva carrera.</option>
-              <option value="4">Estudiar es muy importante, sin embargo, no sé si tendré los ingresos suficientes para financiar mi carrera.</option>
-            </select>
+          <select id="identificacion" value={identificacion} onChange={(e) => setIdentificacion(e.target.value)}>
+            <option value="">Seleccione</option>
+            <option value="1">Estudiar es una inversión para aumentar mis ingresos y progresar en la vida, tanto yo como mi familia.</option>
+            <option value="2">Estudiar es seguir mi vocación para encontrar mi lugar en el mundo laboral. Los ingresos que recibiré no son lo central.</option>
+            <option value="3">Estudiar es una nueva oportunidad de retomar esa carrera que dejé pendiente, postergué, o de darme la posibilidad de comenzar otra nueva carrera.</option>
+            <option value="4">Estudiar es muy importante, sin embargo, no sé si tendré los ingresos suficientes para financiar mi carrera.</option>
+          </select>
           </div>
         </div>
         <div className="form-row">
