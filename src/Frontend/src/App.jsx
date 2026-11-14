@@ -1,14 +1,17 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ProspectoForm from './pages/ProspectoForm';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 
 export default function App() {
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
-      <header style={{ background: 'var(--color-primary)', color: 'white', padding: '1rem', textAlign: 'center', fontFamily: 'Lato, sans-serif', fontWeight: 700 }}>
-        Captura Digital de Prospectos
-      </header>
-      <main>
-        <ProspectoForm />
-      </main>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<ProspectoForm />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
