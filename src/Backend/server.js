@@ -1,8 +1,9 @@
-const express = require('express');
+﻿const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const prospectoRoutes = require('./routes/prospectoRoutes');
+const eventoRoutes = require('./routes/eventoRoutes');
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
 app.use(express.json());
 app.use('/api/prospectos', prospectoRoutes);
+app.use('/api/eventos', eventoRoutes);
 
 // Ruta de prueba para verificar el backend
 app.get('/', (req, res) => {
