@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
+import EventForm from '../components/EventForm';
 
 export default function AdminDashboard() {
   const [prospectos, setProspectos] = useState([]);
   const [eventos, setEventos] = useState([]);
   const [filtros, setFiltros] = useState({ desde: '', hasta: '', evento_id: '', tipo: '', mes: '', dia: '' });
+  const [showEventForm, setShowEventForm] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,12 +43,36 @@ export default function AdminDashboard() {
     a.click();
   };
 
+  const eliminarEvento = async (id) => {
+    if (!id || !confirm('¿Eliminar esta actividad?')) return;
+    try {
+      await api.delete(`/eventos/${id}`);
+      cargarDatos();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Error al eliminar');
+    }
+  };
+
   return (
     <div className="card">
       <h2>Panel de Administración</h2>
       <button onClick={() => { localStorage.removeItem('token'); navigate('/admin/login'); }} className="ghost" style={{ marginBottom: '1rem' }}>
         Cerrar sesión
       </button>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <button className="primary" onClick={() => { setEditingEvent(null); setShowEventForm(true); }}>
+          + Nueva actividad
+        </button>
+      </div>
+
+      {showEventForm && (
+        <EventForm
+          evento={editingEvent}
+          onSave={() => { setShowEventForm(false); setEditingEvent(null); cargarDatos(); }}
+          onCancel={() => { setShowEventForm(false); setEditingEvent(null); }}
+        />
+      )}
 
       <div className="form-row">
         <div className="form-group col-md-3">
@@ -103,6 +130,7 @@ export default function AdminDashboard() {
               <th style={{ padding: '0.5rem', textAlign: 'left' }}>Nombre</th>
               <th style={{ padding: '0.5rem', textAlign: 'left' }}>Actividad</th>
               <th style={{ padding: '0.5rem', textAlign: 'left' }}>Fecha</th>
+              <th style={{ padding: '0.5rem', textAlign: 'left' }}>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -112,6 +140,10 @@ export default function AdminDashboard() {
                 <td style={{ padding: '0.5rem' }}>{p.nombre_completo}</td>
                 <td style={{ padding: '0.5rem' }}>{p.evento?.nombre || '-'}</td>
                 <td style={{ padding: '0.5rem' }}>{new Date(p.fecha_captura).toLocaleDateString()}</td>
+                <td style={{ padding: '0.5rem' }}>
+                  <button className="ghost" onClick={() => { setEditingEvent(p.evento); setShowEventForm(true); }}>Editar</button>
+                  <button className="ghost" onClick={() => eliminarEvento(p.evento?.id)} style={{ marginLeft: '0.5rem', color: '#d32f2f' }}>Eliminar</button>
+                </td>
               </tr>
             ))}
           </tbody>
