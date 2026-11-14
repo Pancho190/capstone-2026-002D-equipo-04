@@ -1,7 +1,7 @@
 # Sistema Integrado de Captura Digital y Gestión de Prospectos para Admisión
 
 ## 1. Descripción del proyecto
-Plataforma web progresiva (PWA) offline-first para la captura digital de prospectos de admisión. El sistema utiliza la cámara del dispositivo móvil para escanear el código PDF417 y la zona MRZ de la cédula de identidad chilena, autocompletando instantáneamente el RUT, nombre y fecha de nacimiento del prospecto. Al recuperar la conectividad, los datos capturados se sincronizan automáticamente con la base de datos central.
+Plataforma web progresiva (PWA) offline-first para la captura digital de prospectos de admisión. El sistema utiliza la cámara del dispositivo móvil para escanear el código PDF417 y la zona MRZ de la cédula de identidad chilena, autocompletando instantáneamente el RUT, nombre y fecha de nacimiento del prospecto. Al recuperar la conectividad, los datos capturados se sincronizan automáticamente con la base de datos central. Incluye un panel de administración para gestionar actividades y prospectos.
 
 ## 2. Tecnologías utilizadas
 - **Backend:** Node.js, Express, Prisma, PostgreSQL
@@ -23,8 +23,8 @@ capstone-2026-002D-equipo-04/
 │   │   └── server.js          # Entry point
 │   └── Frontend/
 │       ├── src/
-│       │   ├── components/    # Scanner, ConsentModal
-│       │   ├── pages/         # Login, ProspectoForm
+│       │   ├── components/    # Scanner, ConsentModal, EventForm
+│       │   ├── pages/         # ProspectoForm, AdminLogin, AdminDashboard
 │       │   ├── data/          # Escuelas, sedes, regiones
 │       │   └── offline.js     # Almacenamiento offline
 │       └── vite.config.js     # Config Vite + PWA + HTTPS
@@ -59,6 +59,7 @@ cd ../src/Backend
 npm install
 npx prisma generate
 npx prisma db push
+npm run seed
 npm run dev
 
 # 3. Frontend (en otra terminal)
@@ -68,7 +69,8 @@ npm run dev -- --host
 ```
 
 ### Acceso
-- **Frontend:** `https://localhost:5173/` (o la IP en red para móvil)
+- **Formulario público:** `https://localhost:5173/`
+- **Panel admin:** `https://localhost:5173/admin/login`
 - **Backend:** `http://localhost:3000/`
 - **pgAdmin:** `http://localhost:5050/`
 
@@ -77,8 +79,16 @@ npm run dev -- --host
 |---|---|---|---|
 | POST | `/api/auth/registro` | Registrar usuario | No |
 | POST | `/api/auth/login` | Iniciar sesión | No |
-| POST | `/api/prospectos` | Crear prospecto | Sí (JWT) |
-| GET | `/api/prospectos` | Listar prospectos (paginado) | Sí (JWT) |
+| POST | `/api/prospectos` | Crear prospecto | No (público) |
+| GET | `/api/prospectos` | Listar prospectos (filtros + paginación) | Sí (JWT) |
+| GET | `/api/prospectos/export` | Exportar a CSV | Admin |
+| GET | `/api/eventos` | Listar actividades | No |
+| POST | `/api/eventos` | Crear actividad | Admin |
+| PUT | `/api/eventos/:id` | Editar actividad | Admin |
+| DELETE | `/api/eventos/:id` | Eliminar actividad | Admin |
+
+### Filtros en prospectos
+`GET /api/prospectos?desde=2026-11-01&hasta=2026-11-30&evento_id=UUID&tipo=Japan&mes=11&dia=15&page=1&limit=20`
 
 ### Parámetros de paginación
 `GET /api/prospectos?page=1&limit=20`
@@ -104,6 +114,7 @@ Scrum
 - **Frontend:** React + Vite + PWA
 - **Comunicación:** REST API con JWT
 - **Offline:** Service Worker + localStorage + sincronización automática
+- **Panel admin:** Rutas protegidas por rol ADMIN
 
 ## 10. Documentación
 - `docs/modelo-datos.md` — Modelo de datos (ERD)
@@ -112,9 +123,11 @@ Scrum
 - `docs/uml-casos-uso.md` — Diagrama UML
 - `docs/inicio-proyecto.md` — Documento de inicio
 - `docs/agile/` — Product Vision, Backlog, Sprint, DoD, retrospectiva
+- `docs/DESIGN.md` — Sistema de diseño
+- `PRODUCT.md` — Contexto del producto
 
 ---
 ### Sección de innovación
 - **¿Qué problema resuelve?** La captura manual de datos de prospectos en admisión, con errores de digitación y pérdida de información offline.
-- **¿Qué hace diferente a la solución?** Escaneo automático de cédula chilena (PDF417/MRZ) con funcionamiento offline y sincronización automática.
-- **¿Qué valor agrega?** Reducción del tiempo de registro, eliminación de errores y operación sin conectividad.
+- **¿Qué hace diferente a la solución?** Escaneo automático de cédula chilena (PDF417/MRZ) con funcionamiento offline y sincronización automática. Panel de administración para gestión de actividades y prospectos.
+- **¿Qué valor agrega?** Reducción del tiempo de registro, eliminación de errores, operación sin conectividad y gestión centralizada de actividades de admisión.

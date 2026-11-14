@@ -38,6 +38,7 @@ docker compose up -d
 cd ../src/Backend
 npx prisma generate
 npx prisma db push
+npm run seed
 ```
 
 ### 6. Arrancar el backend
@@ -46,11 +47,41 @@ npm run dev
 ```
 El servidor quedará en `http://localhost:3000`.
 
+### 7. Arrancar el frontend (en otra terminal)
+```bash
+cd src/Frontend
+npm install
+npm run dev -- --host
+```
+El frontend quedará en `https://localhost:5173/`.
+
 ## Endpoints principales
+
+### Autenticación
 - `POST /api/auth/registro` — Registrar usuario
 - `POST /api/auth/login` — Iniciar sesión
-- `POST /api/prospectos` — Crear prospecto (requiere token)
-- `GET /api/prospectos` — Listar prospectos (requiere token, soporta `?page=` y `?limit=`)
+
+### Prospectos
+- `POST /api/prospectos` — Crear prospecto (público)
+- `GET /api/prospectos` — Listar prospectos (filtros + paginación, requiere JWT)
+- `GET /api/prospectos/export` — Exportar a CSV (solo admin)
+
+### Actividades
+- `GET /api/eventos` — Listar actividades
+- `POST /api/eventos` — Crear actividad (solo admin)
+- `PUT /api/eventos/:id` — Editar actividad (solo admin)
+- `DELETE /api/eventos/:id` — Eliminar actividad (solo admin)
+
+### Filtros en prospectos
+`GET /api/prospectos?desde=2026-11-01&hasta=2026-11-30&evento_id=UUID&tipo=Japan&mes=11&dia=15&page=1&limit=20`
+
+### Parámetros de paginación
+`GET /api/prospectos?page=1&limit=20`
+
+## Panel de administración
+- **URL:** `https://localhost:5173/admin/login`
+- **Credenciales iniciales:** `admin@duoc.cl` / `Admin123!`
+- **Funcionalidades:** filtros por fecha/actividad/tipo/mes/día, tabla de prospectos, exportar CSV, CRUD de actividades.
 
 ## Despliegue con Docker
 ```bash
