@@ -1,7 +1,40 @@
+import { useEffect, useRef } from 'react';
+
 export default function ConsentModal({ onClose }) {
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const modal = modalRef.current;
+    if (!modal) return;
+
+    const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    first?.focus();
+
+    const trap = (e) => {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+
+    modal.addEventListener('keydown', trap);
+    return () => modal.removeEventListener('keydown', trap);
+  }, []);
+
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-      <div style={{ background: 'white', borderRadius: 8, padding: '1.5rem', maxWidth: 500, maxHeight: '80vh', overflowY: 'auto', margin: '1rem' }}>
+      <div ref={modalRef} style={{ background: 'white', borderRadius: 8, padding: '1.5rem', maxWidth: 500, maxHeight: '80vh', overflowY: 'auto', margin: '1rem' }}>
         <h3 style={{ marginBottom: '0.75rem', fontFamily: 'Lato, sans-serif' }}>Consentimiento Informado</h3>
         <p style={{ fontSize: '0.9rem', whiteSpace: 'pre-line' }}>
 {`¿Qué significa sí, autorizo?
@@ -29,11 +62,11 @@ Derecho a revocar este consentimiento, sin efecto retroactivo, mediante solicitu
 Para ejercer estos derechos, deberá comunicarse con el/la Delegado/a de Protección de Datos de Duoc UC, al correo electrónico gobiernodedatos@duoc.cl, quien atenderá su solicitud conforme a los plazos y requisitos establecidos por la normativa vigente.
 
 Declaro haber leído y comprendido el contenido del presente consentimiento informado y otorgo mi autorización para el tratamiento de mis datos personales conforme a lo aquí señalado.`}
-            </p>
-            <button type="button" className="primary" onClick={onClose} style={{ marginTop: '1rem' }}>
-              Cerrar
-            </button>
-          </div>
-        </div>
-      );
+        </p>
+        <button type="button" className="primary" onClick={onClose} style={{ marginTop: '1rem' }}>
+          Cerrar
+        </button>
+      </div>
+    </div>
+  );
 }

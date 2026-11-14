@@ -4,12 +4,13 @@ import { BrowserMultiFormatReader } from '@zxing/browser';
 export default function Scanner({ onScan, onClose }) {
   const videoRef = useRef(null);
   const readerRef = useRef(null);
+  const scannedRef = useRef(false);
+  const controlsRef = useRef(null);
   const [error, setError] = useState('');
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     let stream;
-    let rafId;
     const reader = new BrowserMultiFormatReader();
     readerRef.current = reader;
 
@@ -32,32 +33,21 @@ export default function Scanner({ onScan, onClose }) {
         });
         await video.play();
         setReady(true);
-        console.log('Cámara iniciada');
 
-        if ('BarcodeDetector' in window) {
-          const detector = new BarcodeDetector({ formats: ['pdf417'] });
-          const detect = async () => {
-            try {
-              const barcodes = await detector.detect(video);
-              if (barcodes.length > 0) {
-                onScan(barcodes[0].rawValue);
-                onClose();
-                return;
-              }
-            } catch (e) {
-              // ignorar errores de detección por frame
-            }
-            rafId = requestAnimationFrame(detect);
-          };
-          detect();
-        } else {
-          reader.decodeFromStream(stream, video, (result, err) => {
-            if (result) {
-                onScan(result.getText());
-                onClose();
-              }
-          });
-        }
+        const controlsPromise = reader.decodeFromStream(stream, video, (result, err) => {
+          if (scannedRef.current) return;
+          if (result) {
+            scannedRef.current = true;
+            stream.getTracks().forEach((t) => t.stop());
+            if (videoRef.current) videoRef.current.srcObject = null;
+            controlsPromise.then((controls) => {
+              if (controls && typeof controls.stop === 'function') controls.stop();
+            }).catch(() => {});
+            onScan(result.getText());
+            onClose();
+          }
+        });
+        controlsRef.current = controlsPromise;
       } catch (e) {
         setError('Error: ' + e.message);
         console.error(e);
@@ -67,13 +57,17 @@ export default function Scanner({ onScan, onClose }) {
     start();
 
     return () => {
-      if (rafId) cancelAnimationFrame(rafId);
+      if (controlsRef.current) {
+        controlsRef.current.then((controls) => {
+          if (controls && typeof controls.stop === 'function') controls.stop();
+        }).catch(() => {});
+      }
       if (stream) stream.getTracks().forEach((t) => t.stop());
     };
   }, [onScan, onClose]);
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.95)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 9999, width: '100%', height: '100%' }}>
       <video
         ref={videoRef}
         autoPlay
