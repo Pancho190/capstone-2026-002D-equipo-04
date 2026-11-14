@@ -38,6 +38,7 @@ model Evento {
   fecha_inicio DateTime
   fecha_fin    DateTime
   ubicacion    String
+  tipo         String
   prospectos   Prospecto[]
 }
 
@@ -60,8 +61,8 @@ model Prospecto {
   evento_id        String?
   evento           Evento?   @relation(fields: [evento_id], references: [id])
 
-  usuario_id       String
-  usuario          UsuarioAdmision @relation(fields: [usuario_id], references: [id])
+  usuario_id       String?
+  usuario          UsuarioAdmision? @relation(fields: [usuario_id], references: [id])
 
   carrera_id       String?
   carrera          Carrera?  @relation(fields: [carrera_id], references: [id])
