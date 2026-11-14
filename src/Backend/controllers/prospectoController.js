@@ -85,11 +85,19 @@ const obtenerProspectos = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
+    const { desde, hasta, evento_id, tipo, mes, dia } = req.query;
 
-    const prospectos = await prisma.prospecto.findMany({
-      skip,
-      take: limit,
+    const where = {};
+    if (evento_id) where.evento_id = evento_id;
+    if (tipo) where.evento = { tipo };
+    if (desde || hasta) {
+      where.fecha_captura = {};
+      if (desde) where.fecha_captura.gte = new Date(desde);
+      if (hasta) where.fecha_captura.lte = new Date(hasta);
+    }
+
+    let prospectos = await prisma.prospecto.findMany({
+      where,
       include: {
         usuario: { select: { nombre_completo: true, correo: true } },
         carrera: true,
@@ -99,11 +107,74 @@ const obtenerProspectos = async (req, res) => {
       orderBy: { fecha_captura: 'desc' }
     });
 
-    res.json(prospectos);
+    if (mes || dia) {
+      prospectos = prospectos.filter((p) => {
+        const d = new Date(p.fecha_captura);
+        if (mes && d.getMonth() + 1 !== parseInt(mes)) return false;
+        if (dia && d.getDate() !== parseInt(dia)) return false;
+        return true;
+      });
+    }
+
+    const total = prospectos.length;
+    const skip = (page - 1) * limit;
+    const paginated = prospectos.slice(skip, skip + limit);
+
+    res.json({ data: paginated, total, page, limit });
   } catch (error) {
     console.error('Error al obtener prospectos:', error);
     res.status(500).json({ error: 'Error interno al obtener los prospectos.' });
   }
 };
 
-module.exports = { crearProspecto, obtenerProspectos };
+const exportProspectos = async (req, res) => {
+  try {
+    const { desde, hasta, evento_id, tipo, mes, dia } = req.query;
+    const where = {};
+    if (evento_id) where.evento_id = evento_id;
+    if (tipo) where.evento = { tipo };
+    if (desde || hasta) {
+      where.fecha_captura = {};
+      if (desde) where.fecha_captura.gte = new Date(desde);
+      if (hasta) where.fecha_captura.lte = new Date(hasta);
+    }
+
+    let prospectos = await prisma.prospecto.findMany({
+      where,
+      include: { evento: true, usuario: { select: { nombre_completo: true } } },
+      orderBy: { fecha_captura: 'desc' }
+    });
+
+    if (mes || dia) {
+      prospectos = prospectos.filter((p) => {
+        const d = new Date(p.fecha_captura);
+        if (mes && d.getMonth() + 1 !== parseInt(mes)) return false;
+        if (dia && d.getDate() !== parseInt(dia)) return false;
+        return true;
+      });
+    }
+
+    const header = 'RUT,Nombre,Apellido,Correo,Telefono,Fecha Nacimiento,Actividad,Tipo,Fecha Captura\n';
+    const rows = prospectos.map((p) => {
+      return [
+        p.rut,
+        p.nombre_completo,
+        p.apellidos || '',
+        p.correo || '',
+        p.telefono || '',
+        p.fecha_nacimiento ? new Date(p.fecha_nacimiento).toISOString().split('T')[0] : '',
+        p.evento?.nombre || '',
+        p.evento?.tipo || '',
+        new Date(p.fecha_captura).toISOString().split('T')[0]
+      ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(',');
+    }).join('\n');
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', 'attachment; filename=prospectos.csv');
+    res.send(header + rows);
+  } catch (error) {
+    console.error('Error al exportar prospectos:', error);
+    res.status(500).json({ error: 'Error interno al exportar.' });
+  }
+};
+module.exports = { crearProspecto, obtenerProspectos, exportProspectos };
