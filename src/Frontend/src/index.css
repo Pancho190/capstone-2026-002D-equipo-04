@@ -33,8 +33,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-input, button, select, textarea {
+input, select, textarea {
   font: inherit;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 label {
@@ -52,6 +55,8 @@ label {
 
 .form-control {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 11px 14px;
   border: 1px solid #cbd5e0;
   border-radius: var(--radius);
@@ -94,6 +99,8 @@ button {
   transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
   height: 48px;
   letter-spacing: 0.02em;
+  width: auto;
+  max-width: none;
 }
 
 button:focus-visible {
@@ -198,12 +205,13 @@ button.ghost:hover {
 
 @media (max-width: 640px) {
   body { font-size: 15px; }
-  .card { margin: 0.5rem; padding: 1.25rem; border-top-width: 3px; }
+  .card { margin: 0; padding: 0.75rem 1rem; border-top-width: 3px; border-radius: 0; }
   .card h2 { font-size: 1.2rem; margin-bottom: 1rem; }
-  input, select { font-size: 16px; height: 44px; }
-  button { height: 44px; font-size: 15px; }
+  input, select { font-size: 16px; height: 46px; padding: 8px 12px; }
+  button { height: 46px; font-size: 15px; }
   button.primary { width: 100%; }
-  .form-row { gap: 0.5rem; margin-bottom: 0.1rem; }
-  .form-group { margin-bottom: 0.6rem; }
+  .form-row { gap: 0.5rem; margin-bottom: 0.25rem; }
+  .form-group { margin-bottom: 0.5rem; }
   .section-title { font-size: 0.8rem; }
+  .msg { font-size: 0.85rem; }
 }

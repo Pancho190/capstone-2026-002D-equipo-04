@@ -32,6 +32,9 @@ export default function ProspectoForm() {
   const [showConsent, setShowConsent] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const params = new URLSearchParams(window.location.search);
+  const eventoIdFromUrl = params.get('evento_id');
+
   const [comunas, setComunas] = useState([]);
 
   useEffect(() => {
@@ -77,7 +80,8 @@ export default function ProspectoForm() {
       identificacion: identificacion || null,
       escuela: escuela || null,
       carrera_interes: carrera || null,
-      sede_preferencia: sede || null
+      sede_preferencia: sede || null,
+      evento_id: eventoIdFromUrl || null
     };
     if (!navigator.onLine) {
       addPending(data);
@@ -172,7 +176,7 @@ export default function ProspectoForm() {
         <div className="form-row">
           <div className="form-group col-md-12">
             <label htmlFor="identificacion">De las siguientes afirmaciones, ¿Con cuál te sientes más identificado?</label>
-            <select id="identificacion" value={identificacion} onChange={(e) => setIdentificacion(e.target.value)}>
+            <select style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box' }} id="identificacion" value={identificacion} onChange={(e) => setIdentificacion(e.target.value)}>
               <option value="">Seleccione</option>
               <option value="1">Estudiar es una inversión para aumentar mis ingresos y progresar en la vida, tanto yo como mi familia.</option>
               <option value="2">Estudiar es seguir mi vocación para encontrar mi lugar en el mundo laboral. Los ingresos que recibiré no son lo central.</option>
@@ -184,7 +188,7 @@ export default function ProspectoForm() {
         <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="escuela">Indica tu Escuela de preferencia</label>
-            <select id="escuela" value={escuela} onChange={(e) => { setEscuela(e.target.value); setCarrera(''); }}>
+            <select style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box' }} id="escuela" value={escuela} onChange={(e) => { setEscuela(e.target.value); setCarrera(''); }}>
               <option value="">Seleccione Escuela</option>
               {escuelas.map((e) => (
                 <option key={e} value={e}>{e}</option>
@@ -193,7 +197,7 @@ export default function ProspectoForm() {
           </div>
           <div className="form-group col-md-6">
             <label htmlFor="carrera">Carrera de tu interés</label>
-            <select id="carrera" value={carrera} onChange={(e) => setCarrera(e.target.value)} disabled={!escuela}>
+            <select style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box' }} id="carrera" value={carrera} onChange={(e) => setCarrera(e.target.value)} disabled={!escuela}>
               <option value="">Seleccione Lista</option>
               {(carrerasPorEscuela[escuela] || []).map((c) => (
                 <option key={c} value={c}>{c}</option>
@@ -204,7 +208,7 @@ export default function ProspectoForm() {
         <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="sede">Sede de Preferencia</label>
-            <select id="sede" value={sede} onChange={(e) => setSede(e.target.value)}>
+            <select style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box' }} id="sede" value={sede} onChange={(e) => setSede(e.target.value)}>
               <option value="">Seleccione Sede</option>
               {sedes.map((s) => (
                 <option key={s} value={s}>{s}</option>
