@@ -20,4 +20,11 @@ const verificarToken = (req, res, next) => {
   }
 };
 
-module.exports = { verificarToken };
+const verificarAdmin = (req, res, next) => {
+  if (!req.usuario || req.usuario.rol !== 'ADMIN') {
+    return res.status(403).json({ error: 'Acceso denegado. Se requiere rol ADMIN.' });
+  }
+  next();
+};
+
+module.exports = { verificarToken, verificarAdmin };
