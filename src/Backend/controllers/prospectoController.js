@@ -1,4 +1,4 @@
-const prisma = require('../lib/prisma');
+﻿const prisma = require('../lib/prisma');
 
 // Registrar un nuevo prospecto (Captura en terreno)
 const crearProspecto = async (req, res) => {
