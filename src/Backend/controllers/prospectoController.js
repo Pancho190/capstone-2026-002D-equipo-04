@@ -3,15 +3,23 @@
 // Registrar un nuevo prospecto (Captura en terreno)
 const crearProspecto = async (req, res) => {
   try {
-   const { rut, nombre_completo, apellidos, correo, telefono, carrera_id, evento_id, sede_id, fecha_nacimiento, anio_curso, region, comuna, identificacion, escuela, carrera_interes, sede_preferencia } = req.body;
-    const usuario_id = req.usuario?.id;
-
-    if (!usuario_id) {
-      return res.status(401).json({ error: 'Usuario no identificado en el token.' });
-    }
+   const { rut, nombre_completo, apellidos, genero, correo, telefono, carrera_id, evento_id, sede_id, fecha_nacimiento, anio_curso, region, comuna, identificacion, escuela, carrera_interes, sede_preferencia } = req.body;
+    const usuario_id = req.usuario?.id || null;
 
     if (!rut || !nombre_completo) {
       return res.status(400).json({ error: 'El RUT y el nombre completo son obligatorios.' });
+    }
+
+    // Validar ventana de tiempo si se asocia a una actividad
+    if (evento_id) {
+      const evento = await prisma.evento.findUnique({ where: { id: evento_id } });
+      if (!evento) {
+        return res.status(404).json({ error: 'Actividad no encontrada.' });
+      }
+      const now = new Date();
+      if (now < new Date(evento.fecha_inicio) || now > new Date(evento.fecha_fin)) {
+        return res.status(400).json({ error: 'La actividad no está disponible en este momento.' });
+      }
     }
         const rutValido = /^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$/.test(rut);
     if (!rutValido) {
@@ -22,7 +30,7 @@ const crearProspecto = async (req, res) => {
       where: {
         OR: [
           evento_id ? { rut, evento_id } : { rut, evento_id: null },
-          ...(correo ? [{ correo }] : [])
+          ...(correo ? [evento_id ? { correo, evento_id } : { correo, evento_id: null }] : [])
         ]
       }
     });
@@ -35,6 +43,7 @@ const crearProspecto = async (req, res) => {
       rut,
       nombre_completo,
       apellidos: apellidos || null,
+      genero: genero || null,
       correo: correo || null,
       telefono: telefono || null,
       anio_curso: anio_curso || null,
@@ -45,9 +54,7 @@ const crearProspecto = async (req, res) => {
       carrera_interes: carrera_interes || null,
       sede_preferencia: sede_preferencia || null,
       fecha_nacimiento: fecha_nacimiento ? new Date(fecha_nacimiento) : null,
-      usuario: {
-        connect: { id: usuario_id }
-      }
+      ...(usuario_id ? { usuario: { connect: { id: usuario_id } } } : {})
     };
 
     if (evento_id) {
@@ -177,4 +184,42 @@ const exportProspectos = async (req, res) => {
     res.status(500).json({ error: 'Error interno al exportar.' });
   }
 };
-module.exports = { crearProspecto, obtenerProspectos, exportProspectos };
+const obtenerDuplicados = async (req, res) => {
+  try {
+    const prospectos = await prisma.prospecto.findMany({
+      include: { evento: { select: { id: true, nombre: true, fecha_inicio: true } } },
+      orderBy: { fecha_captura: 'asc' }
+    });
+
+    // Agrupar por RUT
+    const byRut = {};
+    for (const p of prospectos) {
+      if (!byRut[p.rut]) byRut[p.rut] = [];
+      byRut[p.rut].push(p);
+    }
+
+    // Filtrar RUTs que aparecen en más de una actividad distinta
+    const duplicados = [];
+    for (const rut in byRut) {
+      const grupo = byRut[rut];
+      const eventosDistintos = new Set(grupo.map((p) => p.evento_id).filter(Boolean));
+      if (eventosDistintos.size > 1) {
+        duplicados.push({
+          rut,
+          nombre: grupo[0].nombre_completo,
+          actividades: grupo.map((p) => ({
+            nombre: p.evento?.nombre || 'Sin actividad',
+            fecha: p.evento?.fecha_inicio || p.fecha_captura
+          })),
+          primera_captura: grupo[0].fecha_captura
+        });
+      }
+    }
+
+    res.json(duplicados);
+  } catch (error) {
+    console.error('Error al obtener duplicados:', error);
+    res.status(500).json({ error: 'Error interno al obtener duplicados.' });
+  }
+};
+module.exports = { crearProspecto, obtenerProspectos, exportProspectos, obtenerDuplicados };

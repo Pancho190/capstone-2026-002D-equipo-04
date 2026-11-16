@@ -1,4 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
+﻿const { PrismaClient } = require('@prisma/client');
 const prisma = require('../lib/prisma');
 
 const TIPOS = ['Japan', 'Cafeína', 'Sobremesa', 'Asesoría vocacional', 'Ventana vocacional'];
@@ -28,6 +28,20 @@ const obtenerEventos = async (req, res) => {
     res.json(eventos);
   } catch (error) {
     console.error('Error al obtener eventos:', error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+};
+
+const obtenerEvento = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const evento = await prisma.evento.findUnique({ where: { id } });
+    if (!evento) {
+      return res.status(404).json({ error: 'Actividad no encontrada.' });
+    }
+    res.json(evento);
+  } catch (error) {
+    console.error('Error al obtener evento:', error);
     res.status(500).json({ error: 'Error interno del servidor.' });
   }
 };
@@ -63,15 +77,5 @@ const actualizarEvento = async (req, res) => {
   }
 };
 
-const eliminarEvento = async (req, res) => {
-  try {
-    const { id } = req.params;
-    await prisma.evento.delete({ where: { id } });
-    res.json({ mensaje: 'Actividad eliminada' });
-  } catch (error) {
-    console.error('Error al eliminar evento:', error);
-    res.status(500).json({ error: 'Error interno del servidor.' });
-  }
-};
 
-module.exports = { crearEvento, obtenerEventos, actualizarEvento, eliminarEvento };
+module.exports = { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento };

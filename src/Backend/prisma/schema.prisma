@@ -47,6 +47,7 @@ model Prospecto {
   rut              String
   nombre_completo  String
   apellidos        String?
+  genero           String?
   fecha_nacimiento DateTime?
   correo           String?
   telefono         String?
