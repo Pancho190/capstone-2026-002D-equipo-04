@@ -7,6 +7,11 @@ export default function ConsentModal({ onClose }) {
     const modal = modalRef.current;
     if (!modal) return;
 
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    modal.addEventListener('keydown', handleKeyDown);
+
     const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -29,7 +34,10 @@ export default function ConsentModal({ onClose }) {
     };
 
     modal.addEventListener('keydown', trap);
-    return () => modal.removeEventListener('keydown', trap);
+    return () => {
+      modal.removeEventListener('keydown', handleKeyDown);
+      modal.removeEventListener('keydown', trap);
+    };
   }, []);
 
   return (

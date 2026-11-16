@@ -12,7 +12,7 @@ export default function AdminDashboard() {
   const [prospectos, setProspectos] = useState([]);
   const [eventos, setEventos] = useState([]);
   const [duplicados, setDuplicados] = useState([]);
-  const [filtros, setFiltros] = useState({ desde: '', hasta: '', evento_id: '', tipo: '', mes: '', dia: '' });
+  const [filtros, setFiltros] = useState({ periodo: '', desde: '', hasta: '', evento_id: '', tipo: '', mes: '', dia: '' });
   const [showEventForm, setShowEventForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const [showQR, setShowQR] = useState(false);
@@ -104,6 +104,15 @@ export default function AdminDashboard() {
           <div className="card" style={{ margin: 0, padding: '1.25rem' }}>
             <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: 'var(--color-primary)' }}>Filtros</h3>
             <div className="form-group">
+              <label>Periodo de captacion</label>
+              <select value={filtros.periodo} onChange={(e) => setFiltros({ ...filtros, periodo: e.target.value })}>
+                <option value="">Todos</option>
+                {[2026, 2027, 2028, 2029, 2030].map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
               <label>Desde</label>
               <input type="date" value={filtros.desde} onChange={(e) => setFiltros({ ...filtros, desde: e.target.value })} />
             </div>
@@ -145,6 +154,7 @@ export default function AdminDashboard() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
               <button type="button" className="primary" onClick={() => cargarDatos(filtros)} style={{ width: '100%' }}>Filtrar</button>
               <button type="button" className="ghost" onClick={exportarCSV} style={{ width: '100%' }}>Exportar CSV</button>
+              <button type="button" className="ghost" onClick={() => { setFiltros({ periodo: '', desde: '', hasta: '', evento_id: '', tipo: '', mes: '', dia: '' }); cargarDatos({ periodo: '', desde: '', hasta: '', evento_id: '', tipo: '', mes: '', dia: '' }); }} style={{ width: '100%', fontSize: '13px', padding: '4px 12px', height: '32px' }}>Limpiar filtros</button>
             </div>
             <div style={{ marginTop: '2rem', textAlign: 'center', color: '#4a5568', fontSize: '0.85rem' }}>
               <p>Espacio para mascota Duco</p>
@@ -196,12 +206,12 @@ export default function AdminDashboard() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                   <thead>
                     <tr style={{ borderBottom: '2px solid #0033a0' }}>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Nombre</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Tipo</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Fecha inicio</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Inscritos</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Duplicados</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Acciones</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Nombre</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Tipo</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Fecha inicio</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Inscritos</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Duplicados</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -239,10 +249,10 @@ export default function AdminDashboard() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                   <thead>
                     <tr style={{ borderBottom: '2px solid #0033a0' }}>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>RUT</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Nombre</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Actividades</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Primera captura</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">RUT</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Nombre</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Actividades</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Primera captura</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -272,12 +282,12 @@ export default function AdminDashboard() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                   <thead>
                     <tr style={{ borderBottom: '2px solid #0033a0' }}>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>RUT</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Nombre</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Apellido</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Correo</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Teléfono</th>
-                      <th style={{ padding: '0.5rem', textAlign: 'left' }}>Detalle</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">RUT</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Nombre</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Apellido</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Correo</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Teléfono</th>
+                      <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Detalle</th>
                     </tr>
                   </thead>
                   <tbody>

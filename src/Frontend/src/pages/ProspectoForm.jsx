@@ -139,7 +139,7 @@ export default function ProspectoForm() {
         <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="rut">RUT</label>
-            <input id="rut" placeholder="12.345.678-9" value={rut} onChange={(e) => setRut(formatRut(e.target.value))} required disabled={locked} />
+            <input id="rut" name="rut" placeholder="12.345.678-9" value={rut} onChange={(e) => setRut(formatRut(e.target.value))} required disabled={locked} autoComplete="off" />
           </div>
           <div className="form-group col-md-6">
             <label htmlFor="nombres">Nombres</label>
@@ -253,13 +253,13 @@ export default function ProspectoForm() {
         <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="email">Email</label>
-            <input id="email" type="email" placeholder="email@ejemplo.cl" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input id="email" name="email" type="email" placeholder="email@ejemplo.cl" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
           </div>
         </div>
         <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="telefono">Teléfono</label>
-            <input id="telefono" type="tel" placeholder="9 1234 5678" value={telefono} onChange={(e) => setTelefono(e.target.value)} required />
+            <input id="telefono" name="telefono" type="tel" placeholder="9 1234 5678" value={telefono} onChange={(e) => setTelefono(e.target.value)} required autoComplete="tel" />
           </div>
         </div>
         <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -289,7 +289,7 @@ export default function ProspectoForm() {
           {loading ? 'Enviando...' : 'Enviar formulario'}
         </button>
       </form>
-      {msg && <p className={`msg ${msgType}`}>{msg}</p>}
+      {msg && <p className={`msg ${msgType}`} role="status" aria-live="polite">{msg}</p>}
       {pendingCount > 0 && <p className="msg info">Pendientes de sincronizar: {pendingCount}</p>}
     </div>
   );
