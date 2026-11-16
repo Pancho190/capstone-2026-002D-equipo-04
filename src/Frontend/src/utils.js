@@ -30,6 +30,22 @@ export function parseCedula(text) {
   return { rut: run, nombres, apellido, fecha };
 }
 
+export function formatRut(value) {
+  const cleaned = value.replace(/[^0-9kK]/g, '').toUpperCase();
+  if (cleaned.length === 0) return '';
+  if (cleaned.length === 1) return cleaned;
+  const body = cleaned.slice(0, -1);
+  const dv = cleaned.slice(-1);
+  const formattedBody = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return `${formattedBody}-${dv}`;
+}
+export function formatFecha(value) {
+  const cleaned = value.replace(/\D/g, '');
+  if (cleaned.length === 0) return '';
+  if (cleaned.length <= 2) return cleaned;
+  if (cleaned.length <= 4) return `${cleaned.slice(0, 2)}-${cleaned.slice(2)}`;
+  return `${cleaned.slice(0, 2)}-${cleaned.slice(2, 4)}-${cleaned.slice(4, 8)}`;
+}
 export function toISODate(input) {
   if (!input) return null;
   const m = input.trim().match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{2}|\d{4})$/);
