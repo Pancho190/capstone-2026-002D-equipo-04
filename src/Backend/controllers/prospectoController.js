@@ -92,13 +92,20 @@ const obtenerProspectos = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
-    const { desde, hasta, evento_id, tipo, mes, dia } = req.query;
+    const { desde, hasta, evento_id, tipo, mes, dia, periodo } = req.query;
 
     const where = {};
     if (evento_id) where.evento_id = evento_id;
     if (tipo) where.evento = { tipo };
+    if (periodo) {
+      const captureYear = parseInt(periodo) - 1;
+      where.fecha_captura = {
+        gte: new Date(`${captureYear}-01-01`),
+        lte: new Date(`${captureYear}-12-31T23:59:59`)
+      };
+    }
     if (desde || hasta) {
-      where.fecha_captura = {};
+      if (!where.fecha_captura) where.fecha_captura = {};
       if (desde) where.fecha_captura.gte = new Date(desde);
       if (hasta) where.fecha_captura.lte = new Date(hasta);
     }
@@ -136,12 +143,19 @@ const obtenerProspectos = async (req, res) => {
 
 const exportProspectos = async (req, res) => {
   try {
-    const { desde, hasta, evento_id, tipo, mes, dia } = req.query;
+    const { desde, hasta, evento_id, tipo, mes, dia, periodo } = req.query;
     const where = {};
     if (evento_id) where.evento_id = evento_id;
     if (tipo) where.evento = { tipo };
+    if (periodo) {
+      const captureYear = parseInt(periodo) - 1;
+      where.fecha_captura = {
+        gte: new Date(`${captureYear}-01-01`),
+        lte: new Date(`${captureYear}-12-31T23:59:59`)
+      };
+    }
     if (desde || hasta) {
-      where.fecha_captura = {};
+      if (!where.fecha_captura) where.fecha_captura = {};
       if (desde) where.fecha_captura.gte = new Date(desde);
       if (hasta) where.fecha_captura.lte = new Date(hasta);
     }
