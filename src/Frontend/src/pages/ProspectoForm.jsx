@@ -1,16 +1,17 @@
-﻿import { useState, useEffect } from 'react';
+﻿import { useState, useEffect, lazy, Suspense } from 'react';
 import api from '../api';
 import { addPending, syncPending, getPending } from '../offline';
-import Scanner from '../components/Scanner';
 import ConsentModal from '../components/ConsentModal';
+const Scanner = lazy(() => import('../components/Scanner'));
 import { escuelas, carrerasPorEscuela, sedes } from '../data/duoc';
 import { regiones, comunasPorRegion } from '../data/chile';
-import { parseCedula, toISODate } from '../utils';
+import { parseCedula, toISODate, formatRut, formatFecha } from '../utils';
 
 export default function ProspectoForm() {
   const [rut, setRut] = useState('');
   const [nombres, setNombres] = useState('');
   const [apellido, setApellido] = useState('');
+  const [genero, setGenero] = useState('');
   const [anioCurso, setAnioCurso] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
@@ -51,10 +52,19 @@ export default function ProspectoForm() {
 
   const handleScan = (text) => {
     const parsed = parseCedula(text);
-    if (parsed.rut) setRut(parsed.rut);
+    if (parsed.rut) setRut(formatRut(parsed.rut));
     if (parsed.nombres) setNombres(parsed.nombres);
     if (parsed.apellido) setApellido(parsed.apellido);
-    if (parsed.fecha) setFecha(parsed.fecha);
+    if (parsed.fecha) {
+      // Convertir de ISO (YYYY-MM-DD) a DD-MM-YYYY
+      const iso = parsed.fecha;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
+        const [y, m, d] = iso.split('-');
+        setFecha(formatFecha(`${d}${m}${y}`));
+      } else {
+        setFecha(formatFecha(parsed.fecha));
+      }
+    }
     setLocked(true);
     setMsg('Datos escaneados. Revisa y guarda.');
     setMsgType('info');
@@ -71,6 +81,7 @@ export default function ProspectoForm() {
       rut,
       nombre_completo: nombres,
       apellidos: apellido,
+      genero: genero || null,
       correo: email || null,
       telefono: telefono || null,
       fecha_nacimiento: toISODate(fecha),
@@ -106,7 +117,7 @@ export default function ProspectoForm() {
   };
 
   const resetForm = () => {
-    setRut(''); setNombres(''); setApellido(''); setAnioCurso(''); setEmail(''); setTelefono(''); setFecha('');
+    setRut(''); setNombres(''); setApellido(''); setGenero(''); setAnioCurso(''); setEmail(''); setTelefono(''); setFecha('');
     setRegion(''); setComuna(''); setIdentificacion(''); setEscuela(''); setCarrera(''); setSede('');
     setAutorizaEmail(false); setAutorizaTelefono(false); setConsentimiento(false); setLocked(false);
   };
@@ -114,16 +125,21 @@ export default function ProspectoForm() {
   return (
     <div className="card">
       <h2 style={{ marginBottom: '1rem', fontFamily: 'Lato, sans-serif' }}>Capturar prospecto</h2>
-      <button type="button" className="primary" onClick={() => setShowScanner(true)} style={{ marginBottom: '1rem' }} aria-label="Escanear cédula de identidad">
+      <button type="button" className="primary" onClick={() => setShowScanner(true)} style={{ marginBottom: '1rem' }} aria-label="Escanear cedula de identidad">
         Escanear cedula
       </button>
-      {showScanner && <Scanner onScan={handleScan} onClose={() => setShowScanner(false)} />}
+      {showScanner && (
+        <Suspense fallback={<p>Cargando escáner...</p>}>
+          <Scanner onScan={handleScan} onClose={() => setShowScanner(false)} />
+        </Suspense>
+      )}
       <form onSubmit={handleSubmit}>
         <p className="section-title">01 Datos personales</p>
-        <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Ingresa la información tal como aparece en la cédula.</p>
+        <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Ingresa la informacion tal como aparece en la cedula.</p>
         <div className="form-row">
           <div className="form-group col-md-6">
-            <label htmlFor="rut">RUT</label>          <input id="rut" placeholder="12.345.678-9" value={rut} onChange={(e) => setRut(e.target.value)} required disabled={locked} />
+            <label htmlFor="rut">RUT</label>
+            <input id="rut" placeholder="12.345.678-9" value={rut} onChange={(e) => setRut(formatRut(e.target.value))} required disabled={locked} />
           </div>
           <div className="form-group col-md-6">
             <label htmlFor="nombres">Nombres</label>
@@ -135,6 +151,18 @@ export default function ProspectoForm() {
             <label htmlFor="apellido">Primer Apellido</label>
             <input id="apellido" placeholder="Primer Apellido" value={apellido} onChange={(e) => setApellido(e.target.value)} required disabled={locked} />
           </div>
+          <div className="form-group col-md-6">
+            <label htmlFor="genero">Género</label>
+            <select id="genero" value={genero} onChange={(e) => setGenero(e.target.value)}>
+              <option value="">Seleccione Género</option>
+              <option value="masculino">Masculino</option>
+              <option value="femenino">Femenino</option>
+              <option value="otro">Otro</option>
+              <option value="prefiero_no_decir">Prefiero no decir</option>
+            </select>
+          </div>
+        </div>
+        <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="anioCurso">Año en Curso</label>
             <select id="anioCurso" value={anioCurso} onChange={(e) => setAnioCurso(e.target.value)}>
@@ -148,9 +176,13 @@ export default function ProspectoForm() {
               <option value="7">Egresado</option>
             </select>
           </div>
+          <div className="form-group col-md-6">
+            <label htmlFor="fecha">Fecha nacimiento</label>
+            <input id="fecha" placeholder="DD-MM-YYYY" value={fecha} onChange={(e) => setFecha(formatFecha(e.target.value))} disabled={locked} />
+          </div>
         </div>
-        <p className="section-title">02 Ubicación</p>
-        <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Selecciona tu región y comuna.</p>
+        <p className="section-title">02 Ubicacion</p>
+        <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Selecciona tu region y comuna.</p>
         <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="region">Región</label>
@@ -171,12 +203,12 @@ export default function ProspectoForm() {
             </select>
           </div>
         </div>
-        <p className="section-title">03 Interés académico</p>
+        <p className="section-title">03 Interes academico</p>
         <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Conoce sus motivaciones y preferencias de estudio.</p>
         <div className="form-row">
           <div className="form-group col-md-12">
             <label htmlFor="identificacion">De las siguientes afirmaciones, ¿Con cuál te sientes más identificado?</label>
-            <select style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box' }} id="identificacion" value={identificacion} onChange={(e) => setIdentificacion(e.target.value)}>
+            <select id="identificacion" value={identificacion} onChange={(e) => setIdentificacion(e.target.value)}>
               <option value="">Seleccione</option>
               <option value="1">Estudiar es una inversión para aumentar mis ingresos y progresar en la vida, tanto yo como mi familia.</option>
               <option value="2">Estudiar es seguir mi vocación para encontrar mi lugar en el mundo laboral. Los ingresos que recibiré no son lo central.</option>
@@ -188,7 +220,7 @@ export default function ProspectoForm() {
         <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="escuela">Indica tu Escuela de preferencia</label>
-            <select style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box' }} id="escuela" value={escuela} onChange={(e) => { setEscuela(e.target.value); setCarrera(''); }}>
+            <select id="escuela" value={escuela} onChange={(e) => { setEscuela(e.target.value); setCarrera(''); }}>
               <option value="">Seleccione Escuela</option>
               {escuelas.map((e) => (
                 <option key={e} value={e}>{e}</option>
@@ -197,7 +229,7 @@ export default function ProspectoForm() {
           </div>
           <div className="form-group col-md-6">
             <label htmlFor="carrera">Carrera de tu interés</label>
-            <select style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box' }} id="carrera" value={carrera} onChange={(e) => setCarrera(e.target.value)} disabled={!escuela}>
+            <select id="carrera" value={carrera} onChange={(e) => setCarrera(e.target.value)} disabled={!escuela}>
               <option value="">Seleccione Lista</option>
               {(carrerasPorEscuela[escuela] || []).map((c) => (
                 <option key={c} value={c}>{c}</option>
@@ -208,7 +240,7 @@ export default function ProspectoForm() {
         <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="sede">Sede de Preferencia</label>
-            <select style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box' }} id="sede" value={sede} onChange={(e) => setSede(e.target.value)}>
+            <select id="sede" value={sede} onChange={(e) => setSede(e.target.value)}>
               <option value="">Seleccione Sede</option>
               {sedes.map((s) => (
                 <option key={s} value={s}>{s}</option>
@@ -229,10 +261,6 @@ export default function ProspectoForm() {
             <label htmlFor="telefono">Teléfono</label>
             <input id="telefono" type="tel" placeholder="9 1234 5678" value={telefono} onChange={(e) => setTelefono(e.target.value)} required />
           </div>
-          <div className="form-group col-md-6">
-            <label htmlFor="fecha">Fecha nacimiento</label>
-            <input id="fecha" placeholder="DD-MM-YYYY" value={fecha} onChange={(e) => setFecha(e.target.value)} disabled={locked} />
-          </div>
         </div>
         <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <input type="checkbox" id="autEmail" checked={autorizaEmail} onChange={(e) => setAutorizaEmail(e.target.checked)} style={{ width: 'auto', margin: 0 }} />
@@ -240,13 +268,13 @@ export default function ProspectoForm() {
         </div>
         <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <input type="checkbox" id="autTel" checked={autorizaTelefono} onChange={(e) => setAutorizaTelefono(e.target.checked)} style={{ width: 'auto', margin: 0 }} />
-          <label htmlFor="autTel" style={{ margin: 0 }}>Autorizo a contactarme por teléfono</label>
+          <label htmlFor="autTel" style={{ margin: 0 }}>Autorizo a contactarme por telefono</label>
         </div>
         <p className="section-title">05 Consentimiento</p>
         <div className="form-group" style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
           <input type="checkbox" id="consentimiento" checked={consentimiento} onChange={(e) => setConsentimiento(e.target.checked)} required style={{ width: 'auto', margin: 0, marginTop: '0.25rem' }} />
           <label htmlFor="consentimiento" style={{ margin: 0, fontSize: '0.85rem' }}>
-            Acepto que los datos e información que comparta se mantendrán bajo reserva conforme a lo estipulado en la Ley N°19.628, resguardando la confidencialidad, siendo utilizados por Duoc UC solo para efectos de gestión interna, análisis de información y mantener contacto.
+            Acepto que los datos e informacion que comparta se mantendran bajo reserva conforme a lo estipulado en la Ley N°19.628, resguardando la confidencialidad, siendo utilizados por Duoc UC solo para efectos de gestion interna, analisis de informacion y mantener contacto.
           </label>
         </div>
         <button type="button" className="ghost" onClick={() => setShowConsent(true)} style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.85rem' }}>
@@ -255,10 +283,10 @@ export default function ProspectoForm() {
         {showConsent && <ConsentModal onClose={() => setShowConsent(false)} />}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '0.85rem', color: '#4a5568' }}>
           <span>🔒</span>
-          <span>Los datos se tratarán de forma confidencial.</span>
+          <span>Los datos se trataran de forma confidencial.</span>
         </div>
         <button type="submit" className="primary" style={{ width: '100%' }} disabled={loading}>
-          {loading ? 'Enviando...' : 'Enviar formulario →'}
+          {loading ? 'Enviando...' : 'Enviar formulario'}
         </button>
       </form>
       {msg && <p className={`msg ${msgType}`}>{msg}</p>}
