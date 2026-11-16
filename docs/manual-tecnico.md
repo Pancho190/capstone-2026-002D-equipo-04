@@ -67,10 +67,10 @@ El frontend quedará en `https://localhost:5173/`.
 - `GET /api/prospectos/export` — Exportar a CSV (solo admin)
 
 ### Actividades
-- `GET /api/eventos` — Listar actividades
-- `POST /api/eventos` — Crear actividad (solo admin)
-- `PUT /api/eventos/:id` — Editar actividad (solo admin)
-- `DELETE /api/eventos/:id` — Eliminar actividad (solo admin)
+- `GET /api/eventos` - Listar actividades
+- `POST /api/eventos` - Crear actividad (solo admin)
+- `PUT /api/eventos/:id` - Editar actividad (solo admin)
+- `GET /api/prospectos/duplicados` - Listar prospectos duplicados (solo admin)
 
 ### Filtros en prospectos
 `GET /api/prospectos?desde=2026-11-01&hasta=2026-11-30&evento_id=UUID&tipo=Japan&mes=11&dia=15&page=1&limit=20`
