@@ -23,7 +23,7 @@ capstone-2026-002D-equipo-04/
 │   │   └── server.js          # Entry point
 │   └── Frontend/
 │       ├── src/
-│       │   ├── components/    # Scanner, ConsentModal, EventForm
+│       │   ├── components/    # Scanner, ConsentModal, EventForm, QRModal, ActivityChart, ChartsSection, DetailCharts, ProspectDetailModal
 │       │   ├── pages/         # ProspectoForm, AdminLogin, AdminDashboard
 │       │   ├── data/          # Escuelas, sedes, regiones
 │       │   └── offline.js     # Almacenamiento offline
@@ -82,13 +82,16 @@ npm run dev -- --host
 | POST | `/api/prospectos` | Crear prospecto | No (público) |
 | GET | `/api/prospectos` | Listar prospectos (filtros + paginación) | Sí (JWT) |
 | GET | `/api/prospectos/export` | Exportar a CSV | Admin |
+| GET | `/api/prospectos/duplicados` | Listar prospectos duplicados | Admin |
 | GET | `/api/eventos` | Listar actividades | No |
 | POST | `/api/eventos` | Crear actividad | Admin |
 | PUT | `/api/eventos/:id` | Editar actividad | Admin |
 | DELETE | `/api/eventos/:id` | Eliminar actividad | Admin |
 
 ### Filtros en prospectos
-`GET /api/prospectos?desde=2026-11-01&hasta=2026-11-30&evento_id=UUID&tipo=Japan&mes=11&dia=15&page=1&limit=20`
+`GET /api/prospectos?desde=2026-11-01&hasta=2026-11-30&evento_id=UUID&tipo=Japan&mes=11&dia=15&periodo=2027&page=1&limit=20`
+
+El filtro `periodo` corresponde al año de captación + 1 (ej: datos capturados en 2026 → periodo 2027).
 
 ### Parámetros de paginación
 `GET /api/prospectos?page=1&limit=20`
@@ -114,7 +117,7 @@ Scrum
 - **Frontend:** React + Vite + PWA
 - **Comunicación:** REST API con JWT
 - **Offline:** Service Worker + localStorage + sincronización automática
-- **Panel admin:** Rutas protegidas por rol ADMIN
+- **Panel admin:** Rutas protegidas por rol ADMIN. Incluye filtros (fecha, actividad, tipo, mes, día, periodo), tabla de prospectos, modal de detalle, gráficos (región, género, edad, carrera/escuela), exportación CSV, QR, CRUD de actividades, detección de duplicados.
 
 ## 10. Documentación
 - `docs/modelo-datos.md` — Modelo de datos (ERD)
@@ -123,8 +126,8 @@ Scrum
 - `docs/uml-casos-uso.md` — Diagrama UML
 - `docs/inicio-proyecto.md` — Documento de inicio
 - `docs/agile/` — Product Vision, Backlog, Sprint, DoD, retrospectiva
-- `docs/DESIGN.md` — Sistema de diseño
-- `PRODUCT.md` — Contexto del producto
+- `fase2-desarrollo/grupales/Plan de Pruebas.md` — Plan de pruebas (Jest + Supertest)
+- `fase2-desarrollo/grupales/Evidencias de documentación/` — Evidencias para evaluación MICO
 
 ---
 ### Sección de innovación
