@@ -123,12 +123,15 @@ Scrum
 - `docs/fase2-desarrollo/grupales/Evidencias de documentación/modelo-datos.md` — Modelo de datos (ERD)
 - `docs/fase2-desarrollo/grupales/Evidencias de documentación/manual-tecnico.md` — Manual de instalación y despliegue
 - `docs/fase2-desarrollo/grupales/Evidencias de documentación/requisitos-no-funcionales.md` — RNF
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-casos-uso.md` — Diagrama UML
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-casos-uso.md` — Diagrama UML (Casos de uso)
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-clases.md` — Diagrama UML (Clases)
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-secuencia.md` — Diagrama UML (Secuencia)
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-componentes.md` — Diagrama UML (Componentes)
 - `docs/fase2-desarrollo/grupales/Evidencias de documentación/inicio-proyecto.md` — Documento de inicio
 - `docs/agile/` — Product Vision, Backlog, Sprint, DoD, retrospectiva
-- `fase2-desarrollo/grupales/Plan de Pruebas.md` — Plan de pruebas (Jest + Supertest)
-- `fase2-desarrollo/grupales/Evidencias de documentación/` — Copia de docs/ para evaluación MICO
-- `fase2-desarrollo/grupales/Evidencias de sistema (Aplicación - Base de datos)/` — Schema Prisma + capturas de pantalla
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/Plan de Pruebas.md` — Plan de pruebas (Jest + Supertest)
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/` — Copia de docs/ para evaluación MICO
+- `docs/fase2-desarrollo/grupales/Evidencias de sistema (Aplicación - Base de datos)/` — Schema Prisma + capturas de pantalla
 
 ---
 ### Sección de innovación
