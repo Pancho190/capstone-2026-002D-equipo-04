@@ -120,11 +120,11 @@ Scrum
 - **Panel admin:** Rutas protegidas por rol ADMIN. Incluye filtros (fecha, actividad, tipo, mes, día, periodo), tabla de prospectos, modal de detalle, gráficos (región, género, edad, carrera/escuela), exportación CSV, QR, CRUD de actividades, detección de duplicados.
 
 ## 10. Documentación
-- `docs/modelo-datos.md` — Modelo de datos (ERD)
-- `docs/manual-tecnico.md` — Manual de instalación y despliegue
-- `docs/requisitos-no-funcionales.md` — RNF
-- `docs/uml-casos-uso.md` — Diagrama UML
-- `docs/inicio-proyecto.md` — Documento de inicio
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/modelo-datos.md` — Modelo de datos (ERD)
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/manual-tecnico.md` — Manual de instalación y despliegue
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/requisitos-no-funcionales.md` — RNF
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-casos-uso.md` — Diagrama UML
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/inicio-proyecto.md` — Documento de inicio
 - `docs/agile/` — Product Vision, Backlog, Sprint, DoD, retrospectiva
 - `fase2-desarrollo/grupales/Plan de Pruebas.md` — Plan de pruebas (Jest + Supertest)
 - `fase2-desarrollo/grupales/Evidencias de documentación/` — Copia de docs/ para evaluación MICO
