@@ -85,15 +85,16 @@ export default function AdminDashboard() {
   const totalExperiencias = filteredEventos.length;
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
-      <header style={{ background: 'var(--color-primary)', color: 'white', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'Lato, sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#f0f2f5', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
+      <header style={{ background: '#ffffff', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e4eaf1', boxShadow: '0 1px 3px rgba(10,36,69,0.04)' }}>
         <div>
-          <span style={{ fontSize: '0.85rem', opacity: 0.8 }}>Admisión Duoc UC, Valparaíso</span>
-          <h1 style={{ fontSize: '1.25rem', margin: 0 }}>Panel de Administración</h1>
+          <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#63748a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Vista general</span>
+          <h1 style={{ fontSize: '1.5rem', margin: 0, fontWeight: 700, color: '#172b46' }}>Resultados de actividades</h1>
+          <span style={{ fontSize: '0.8rem', color: '#63748a' }}>Consulta las actividades y accede a sus prospectos.</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <span style={{ fontSize: '0.85rem' }}>Nivel: ADMIN</span>
-          <button onClick={() => { localStorage.removeItem('token'); navigate('/admin/login'); }} className="ghost" style={{ color: 'white', border: '1px solid rgba(255,255,255,0.5)' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 500, color: '#63748a', background: '#e8eef6', padding: '0.35rem 0.75rem', borderRadius: '15px' }}>Datos de ejemplo</span>
+          <button onClick={() => { localStorage.removeItem('token'); navigate('/admin/login'); }} className="ghost" style={{ color: '#172b46', border: '1px solid #e4eaf1', background: '#ffffff', height: '36px', fontSize: '0.85rem', padding: '0 1rem' }}>
             Cerrar sesión
           </button>
         </div>
@@ -101,8 +102,8 @@ export default function AdminDashboard() {
 
       <div style={{ display: 'flex', gap: '1.5rem', padding: '1.5rem', maxWidth: 1400, margin: '0 auto' }}>
         <aside style={{ width: 300, flexShrink: 0 }}>
-          <div className="card" style={{ margin: 0, padding: '1.25rem' }}>
-            <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: 'var(--color-primary)' }}>Filtros</h3>
+          <div style={{ margin: 0, padding: '1.25rem', background: '#ffffff', border: '1px solid #e4eaf1', borderRadius: '12px', boxShadow: '0 3px 6px rgba(10,36,69,0.04)' }}>
+            <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: '#172b46', fontWeight: 600 }}>Filtros</h3>
             <div className="form-group">
               <label>Periodo de captacion</label>
               <select value={filtros.periodo} onChange={(e) => setFiltros({ ...filtros, periodo: e.target.value })}>
@@ -156,7 +157,7 @@ export default function AdminDashboard() {
               <button type="button" className="ghost" onClick={exportarCSV} style={{ width: '100%' }}>Exportar CSV</button>
               <button type="button" className="ghost" onClick={() => { setFiltros({ periodo: '', desde: '', hasta: '', evento_id: '', tipo: '', mes: '', dia: '' }); cargarDatos({ periodo: '', desde: '', hasta: '', evento_id: '', tipo: '', mes: '', dia: '' }); }} style={{ width: '100%', fontSize: '13px', padding: '4px 12px', height: '32px' }}>Limpiar filtros</button>
             </div>
-            <div style={{ marginTop: '2rem', textAlign: 'center', color: '#4a5568', fontSize: '0.85rem' }}>
+            <div style={{ marginTop: '2rem', textAlign: 'center', color: '#63748a', fontSize: '0.85rem' }}>
               <p>Espacio para mascota Duco</p>
             </div>
           </div>
@@ -179,18 +180,30 @@ export default function AdminDashboard() {
 
           {showQR && <QRModal evento={qrEvento} onClose={() => { setShowQR(false); setQrEvento(null); }} />}
 
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-            <div className="card" style={{ flex: 1, minWidth: 180, margin: 0, padding: '1rem', textAlign: 'center', borderLeft: '4px solid #0033a0' }}>
-              <p style={{ fontSize: '0.85rem', color: '#4a5568', margin: 0 }}>Total {vista === 'detalle' ? 'en la actividad' : 'inscritos global'}</p>
-              <p style={{ fontSize: '2rem', fontWeight: 700, color: '#0033a0', margin: 0 }}>{totalInscritos}</p>
+          <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: 280, background: '#ffffff', border: '1px solid #e4eaf1', borderRadius: '12px', padding: '1.25rem 1.5rem', boxShadow: '0 3px 6px rgba(10,36,69,0.04)', position: 'relative' }}>
+              <p style={{ fontSize: '0.8rem', fontWeight: 500, color: '#63748a', margin: 0 }}>Total {vista === 'detalle' ? 'en la actividad' : 'inscritos global'}</p>
+              <p style={{ fontSize: '2rem', fontWeight: 700, color: '#172b46', margin: '0.5rem 0 0.25rem 0' }}>{totalInscritos}</p>
+              <p style={{ fontSize: '0.7rem', color: '#63748a', margin: 0 }}>En todas las actividades</p>
+              <div style={{ position: 'absolute', right: '1.25rem', top: '1.25rem', width: '44px', height: '44px', borderRadius: '11px', background: '#eaf1fa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1454a0' }}>U</span>
+              </div>
             </div>
-            <div className="card" style={{ flex: 1, minWidth: 180, margin: 0, padding: '1rem', textAlign: 'center', borderLeft: '4px solid #d32f2f' }}>
-              <p style={{ fontSize: '0.85rem', color: '#4a5568', margin: 0 }}>Total duplicados</p>
-              <p style={{ fontSize: '2rem', fontWeight: 700, color: '#d32f2f', margin: 0 }}>{totalDuplicados}</p>
+            <div style={{ flex: 1, minWidth: 280, background: '#ffffff', border: '1px solid #e4eaf1', borderRadius: '12px', padding: '1.25rem 1.5rem', boxShadow: '0 3px 6px rgba(10,36,69,0.04)', position: 'relative' }}>
+              <p style={{ fontSize: '0.8rem', fontWeight: 500, color: '#63748a', margin: 0 }}>Total duplicados</p>
+              <p style={{ fontSize: '2rem', fontWeight: 700, color: '#172b46', margin: '0.5rem 0 0.25rem 0' }}>{totalDuplicados}</p>
+              <p style={{ fontSize: '0.7rem', color: '#63748a', margin: 0 }}>En todas las actividades</p>
+              <div style={{ position: 'absolute', right: '1.25rem', top: '1.25rem', width: '44px', height: '44px', borderRadius: '11px', background: '#fff5dd', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#b7791f' }}>D</span>
+              </div>
             </div>
-            <div className="card" style={{ flex: 1, minWidth: 180, margin: 0, padding: '1rem', textAlign: 'center', borderLeft: '4px solid #6dd400' }}>
-              <p style={{ fontSize: '0.85rem', color: '#4a5568', margin: 0 }}>Experiencias</p>
-              <p style={{ fontSize: '2rem', fontWeight: 700, color: '#6dd400', margin: 0 }}>{totalExperiencias}</p>
+            <div style={{ flex: 1, minWidth: 280, background: '#ffffff', border: '1px solid #e4eaf1', borderRadius: '12px', padding: '1.25rem 1.5rem', boxShadow: '0 3px 6px rgba(10,36,69,0.04)', position: 'relative' }}>
+              <p style={{ fontSize: '0.8rem', fontWeight: 500, color: '#63748a', margin: 0 }}>Experiencias</p>
+              <p style={{ fontSize: '2rem', fontWeight: 700, color: '#172b46', margin: '0.5rem 0 0.25rem 0' }}>{totalExperiencias}</p>
+              <p style={{ fontSize: '0.7rem', color: '#63748a', margin: 0 }}>Experiencias registradas</p>
+              <div style={{ position: 'absolute', right: '1.25rem', top: '1.25rem', width: '44px', height: '44px', borderRadius: '11px', background: '#e8f5f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#276749' }}>E</span>
+              </div>
             </div>
           </div>
 
@@ -201,11 +214,11 @@ export default function AdminDashboard() {
 
           {vista === 'actividades' && (
             <>
-              <h3 style={{ marginBottom: '0.75rem', color: '#0033a0' }}>Actividades filtradas</h3>
+              <h3 style={{ marginBottom: '0.75rem', color: '#172b46' }}>Actividades filtradas</h3>
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
                   <thead>
-                    <tr style={{ borderBottom: '2px solid #0033a0' }}>
+                    <tr style={{ borderBottom: '1px solid #e4eaf1', background: '#f2f5f9' }}>
                       <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Nombre</th>
                       <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Tipo</th>
                       <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Fecha inicio</th>
@@ -233,7 +246,7 @@ export default function AdminDashboard() {
                     ))}
                   </tbody>
                 </table>
-                {filteredEventos.length === 0 && <p style={{ textAlign: 'center', padding: '2rem', color: '#4a5568' }}>No hay actividades.</p>}
+                {filteredEventos.length === 0 && <p style={{ textAlign: 'center', padding: '2rem', color: '#63748a' }}>No hay actividades.</p>}
               </div>
 
               <Suspense fallback={<p>Cargando gráficos...</p>}>
@@ -244,11 +257,11 @@ export default function AdminDashboard() {
 
           {vista === 'duplicados' && (
             <>
-              <h3 style={{ marginBottom: '0.75rem', color: '#0033a0' }}>Prospectos duplicados en actividades</h3>
+              <h3 style={{ marginBottom: '0.75rem', color: '#172b46' }}>Prospectos duplicados en actividades</h3>
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
                   <thead>
-                    <tr style={{ borderBottom: '2px solid #0033a0' }}>
+                    <tr style={{ borderBottom: '1px solid #e4eaf1', background: '#f2f5f9' }}>
                       <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">RUT</th>
                       <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Nombre</th>
                       <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Actividades</th>
@@ -266,7 +279,7 @@ export default function AdminDashboard() {
                     ))}
                   </tbody>
                 </table>
-                {duplicados.length === 0 && <p style={{ textAlign: 'center', padding: '2rem', color: '#4a5568' }}>No hay prospectos duplicados.</p>}
+                {duplicados.length === 0 && <p style={{ textAlign: 'center', padding: '2rem', color: '#63748a' }}>No hay prospectos duplicados.</p>}
               </div>
             </>
           )}
@@ -276,12 +289,12 @@ export default function AdminDashboard() {
               <div style={{ marginBottom: '1rem' }}>
                 <button className="ghost" onClick={volverActividades}>← Volver al listado de actividades</button>
               </div>
-              <h3 style={{ marginBottom: '0.75rem', color: '#0033a0' }}>Inscritos en: {actividadSeleccionada.nombre}</h3>
+              <h3 style={{ marginBottom: '0.75rem', color: '#172b46' }}>Inscritos en: {actividadSeleccionada.nombre}</h3>
               <button className="primary" onClick={exportarCSV} style={{ marginBottom: '1rem' }}>Exportar CSV</button>
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
                   <thead>
-                    <tr style={{ borderBottom: '2px solid #0033a0' }}>
+                    <tr style={{ borderBottom: '1px solid #e4eaf1', background: '#f2f5f9' }}>
                       <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">RUT</th>
                       <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Nombre</th>
                       <th style={{ padding: '0.5rem', textAlign: 'left' }} scope="col">Apellido</th>
@@ -305,7 +318,7 @@ export default function AdminDashboard() {
                     ))}
                   </tbody>
                 </table>
-                {prospectos.length === 0 && <p style={{ textAlign: 'center', padding: '2rem', color: '#4a5568' }}>No hay prospectos.</p>}
+                {prospectos.length === 0 && <p style={{ textAlign: 'center', padding: '2rem', color: '#63748a' }}>No hay prospectos.</p>}
               </div>
               <Suspense fallback={<p>Cargando gráficos...</p>}>
                 <DetailCharts prospectos={prospectos} />

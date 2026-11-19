@@ -3,6 +3,7 @@
 /* waive: 47b (no hero image - form is the product), 82 (no invented metrics) */
 
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   --color-primary: #0033a0;
