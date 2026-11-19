@@ -124,9 +124,10 @@ export default function ProspectoForm() {
 
   return (
     <div className="card">
-      <h2 style={{ marginBottom: '1rem', fontFamily: 'Lato, sans-serif' }}>Capturar prospecto</h2>
-      <button type="button" className="primary" onClick={() => setShowScanner(true)} style={{ marginBottom: '1rem' }} aria-label="Escanear cedula de identidad">
-        Escanear cedula
+      <h2 style={{ marginBottom: '0.25rem', fontFamily: 'Lato, sans-serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-primary)', overflowWrap: 'break-word', minWidth: 0 }}>Capturar prospecto</h2>
+      <p style={{ fontSize: '0.9rem', color: 'var(--color-muted)', marginBottom: '1.25rem' }}>Completa tus datos o escanea tu cédula para autocompletar.</p>
+      <button type="button" className="primary" onClick={() => setShowScanner(true)} style={{ marginBottom: '1.25rem', height: '52px', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }} aria-label="Escanear cedula de identidad">
+        Escanear cédula
       </button>
       {showScanner && (
         <Suspense fallback={<p>Cargando escáner...</p>}>
@@ -134,7 +135,7 @@ export default function ProspectoForm() {
         </Suspense>
       )}
       <form onSubmit={handleSubmit}>
-        <p className="section-title">01 Datos personales</p>
+        <p className="section-title">Datos personales</p>
         <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Ingresa la informacion tal como aparece en la cedula.</p>
         <div className="form-row">
           <div className="form-group col-md-6">
@@ -181,7 +182,7 @@ export default function ProspectoForm() {
             <input id="fecha" placeholder="DD-MM-YYYY" value={fecha} onChange={(e) => setFecha(formatFecha(e.target.value))} disabled={locked} />
           </div>
         </div>
-        <p className="section-title">02 Ubicacion</p>
+        <p className="section-title">Ubicación</p>
         <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Selecciona tu region y comuna.</p>
         <div className="form-row">
           <div className="form-group col-md-6">
@@ -203,7 +204,7 @@ export default function ProspectoForm() {
             </select>
           </div>
         </div>
-        <p className="section-title">03 Interes academico</p>
+        <p className="section-title">Interés académico</p>
         <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Conoce sus motivaciones y preferencias de estudio.</p>
         <div className="form-row">
           <div className="form-group col-md-12">
@@ -248,7 +249,7 @@ export default function ProspectoForm() {
             </select>
           </div>
         </div>
-        <p className="section-title">04 Contacto</p>
+        <p className="section-title">Contacto</p>
         <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Indica los datos y los canales autorizados de contacto.</p>
         <div className="form-row">
           <div className="form-group col-md-6">
@@ -270,7 +271,7 @@ export default function ProspectoForm() {
           <input type="checkbox" id="autTel" checked={autorizaTelefono} onChange={(e) => setAutorizaTelefono(e.target.checked)} style={{ width: 'auto', margin: 0 }} />
           <label htmlFor="autTel" style={{ margin: 0 }}>Autorizo a contactarme por telefono</label>
         </div>
-        <p className="section-title">05 Consentimiento</p>
+        <p className="section-title">Consentimiento</p>
         <div className="form-group" style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
           <input type="checkbox" id="consentimiento" checked={consentimiento} onChange={(e) => setConsentimiento(e.target.checked)} required style={{ width: 'auto', margin: 0, marginTop: '0.25rem' }} />
           <label htmlFor="consentimiento" style={{ margin: 0, fontSize: '0.85rem' }}>
@@ -281,9 +282,8 @@ export default function ProspectoForm() {
           Ver Consentimiento Informado
         </button>
         {showConsent && <ConsentModal onClose={() => setShowConsent(false)} />}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '0.85rem', color: '#4a5568' }}>
-          <span>🔒</span>
-          <span>Los datos se trataran de forma confidencial.</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '0.85rem', color: 'var(--color-muted)' }}>
+          <span>Los datos se tratan de forma confidencial.</span>
         </div>
         <button type="submit" className="primary" style={{ width: '100%' }} disabled={loading}>
           {loading ? 'Enviando...' : 'Enviar formulario'}
