@@ -24,5 +24,31 @@ services:
     depends_on:
       - db
 
+  backend:
+    build: ../src/Backend
+    container_name: capstone_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:root@db:5432/admision_db
+      JWT_SECRET: ${JWT_SECRET:-cambia_esto_por_un_secreto_seguro}
+      FRONTEND_URL: http://localhost:5173
+    depends_on:
+      - db
+    volumes:
+      - ../src/Backend:/app
+      - /app/node_modules
+
+  frontend:
+    build: ../src/Frontend
+    container_name: capstone_frontend
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
 volumes:
   pgdata:
