@@ -15,8 +15,7 @@ export default defineConfig({
         description: 'Registro de prospectos con escaneo de cédula',
         theme_color: '#1976d2',
         icons: [
-          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' }
+          { src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml' }
         ]
       }
     })
