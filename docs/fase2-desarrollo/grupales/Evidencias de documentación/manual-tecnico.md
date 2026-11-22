@@ -27,10 +27,18 @@ cd src/Backend
 npm install
 ```
 
-### 4. Levantar la base de datos
+### 4. Configurar la base de datos
+
+**Opción A: Base de datos en la nube (Neon) — recomendado**
+1. Crear cuenta en https://neon.tech
+2. Crear proyecto "capstone-admision" en región São Paulo
+3. Copiar la Connection string
+4. Pegarla en `src/Backend/.env` como `DATABASE_URL`
+
+**Opción B: Base de datos local (Docker)**
 ```bash
 cd ../../docker
-docker compose up -d
+docker compose --profile local-db up -d
 ```
 
 ### 5. Sincronizar Prisma

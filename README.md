@@ -48,11 +48,27 @@ cp docker/.env.example src/Backend/.env
 # Completar JWT_SECRET y otros valores
 ```
 
-### Levantar con Docker
+### Opción A: Base de datos en la nube (Neon) — recomendado para equipo
+```bash
+# 1. Configurar .env con la URL de Neon (ver docker/.env.example)
+cd src/Backend
+npm install
+npx prisma generate
+npx prisma db push
+npm run seed
+npm run dev
+
+# 2. Frontend (en otra terminal)
+cd ../src/Frontend
+npm install
+npm run dev -- --host
+```
+
+### Opción B: Base de datos local (Docker)
 ```bash
 # 1. Base de datos
 cd docker
-docker compose up -d
+docker compose --profile local-db up -d
 
 # 2. Backend
 cd ../src/Backend
