@@ -1,4 +1,6 @@
 services:
+  # Base de datos local (opcional si usas Neon en la nube)
+  # Para usar Neon, comenta este servicio y configura DATABASE_URL en .env
   db:
     image: postgres:15
     container_name: capstone_postgres
@@ -11,6 +13,8 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    profiles:
+      - local-db
 
   pgadmin:
     image: dpage/pgadmin4
