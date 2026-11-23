@@ -12,12 +12,12 @@ export default function AdminLogin() {
     e.preventDefault();
     try {
       const res = await api.post('/auth/login', { email, password });
-      if (res.data.usuario.rol !== 'ADMIN') {
-        setError('No tienes permisos de administrador.');
-        return;
-      }
       localStorage.setItem('token', res.data.token);
-      navigate('/admin');
+      if (res.data.usuario.rol === 'ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/captador');
+      }
     } catch (err) {
       setError(err.response?.data?.error || 'Error al iniciar sesión');
     }
@@ -25,7 +25,7 @@ export default function AdminLogin() {
 
   return (
     <div className="card">
-      <h2>Panel de Administración</h2>
+      <h2>Iniciar sesión</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="email">Email</label>
