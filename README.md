@@ -94,7 +94,6 @@ npm run dev -- --host
 - **Panel admin:** https://capstone-admision.vercel.app/admin/login
 - **Backend API:** https://capstone-backend-so19.onrender.com/
 - **Base de datos:** https://console.neon.tech (Neon)
-- **Credenciales admin:** admin@duoc.cl / Admin123!
 
 ## 5. Endpoints de la API
 | Método | Ruta | Descripción | Auth |
