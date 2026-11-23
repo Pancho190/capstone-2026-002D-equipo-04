@@ -236,4 +236,19 @@ const obtenerDuplicados = async (req, res) => {
     res.status(500).json({ error: 'Error interno al obtener duplicados.' });
   }
 };
-module.exports = { crearProspecto, obtenerProspectos, exportProspectos, obtenerDuplicados };
+const obtenerMisProspectos = async (req, res) => {
+  try {
+    const usuario_id = req.usuario.id;
+    const prospectos = await prisma.prospecto.findMany({
+      where: { usuario_id },
+      include: { evento: true, carrera: true, sede: true },
+      orderBy: { fecha_captura: 'desc' }
+    });
+    res.json({ data: prospectos, total: prospectos.length });
+  } catch (error) {
+    console.error('Error al obtener mis prospectos:', error);
+    res.status(500).json({ error: 'Error interno al obtener prospectos.' });
+  }
+};
+
+module.exports = { crearProspecto, obtenerProspectos, exportProspectos, obtenerDuplicados, obtenerMisProspectos };
