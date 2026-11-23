@@ -60,6 +60,7 @@ export default function CaptadorDashboard() {
   const verInscritos = async (evento) => {
     setSelectedEvento(evento);
     setLoadingInscritos(true);
+    cargarDatos();
     try {
       const res = await api.get(`/prospectos/evento/${evento.id}`);
       setInscritos(res.data.data || res.data);
