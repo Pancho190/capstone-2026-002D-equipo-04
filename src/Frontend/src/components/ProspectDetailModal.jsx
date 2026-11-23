@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+﻿import { useEffect, useRef } from 'react';
 
 export default function ProspectDetailModal({ prospecto, onClose }) {
   const modalRef = useRef(null);
@@ -42,6 +42,16 @@ export default function ProspectDetailModal({ prospecto, onClose }) {
 
   if (!prospecto) return null;
 
+  const anioLabels = {
+    '1': '1° Medio',
+    '2': '2° Medio',
+    '3': '3° Medio',
+    '4': '4° Medio',
+    '5': '1° y 2° Medio (2x1)',
+    '6': '3° y 4° Medio (2x1)',
+    '7': 'Egresado'
+  };
+
   const fields = [
     { label: 'RUT', value: prospecto.rut },
     { label: 'Nombres', value: prospecto.nombre_completo },
@@ -50,7 +60,7 @@ export default function ProspectDetailModal({ prospecto, onClose }) {
     { label: 'Fecha nacimiento', value: prospecto.fecha_nacimiento ? new Date(prospecto.fecha_nacimiento).toLocaleDateString() : '-' },
     { label: 'Región', value: prospecto.region },
     { label: 'Comuna', value: prospecto.comuna },
-    { label: 'Año en curso', value: prospecto.anio_curso },
+    { label: 'Año en curso', value: anioLabels[prospecto.anio_curso] || prospecto.anio_curso || '-' },
     { label: 'Identificación', value: prospecto.identificacion },
     { label: 'Escuela', value: prospecto.escuela },
     { label: 'Carrera de interés', value: prospecto.carrera_interes },
