@@ -19,6 +19,16 @@ export default function CaptadorDashboard() {
   useEffect(() => {
     const token = sessionStorage.getItem('token');
     if (!token) { navigate('/login'); return; }
+
+    // Polling cada 30 segundos para refrescar datos
+    const interval = setInterval(() => { cargarDatos(); }, 30000);
+    const handleVisibility = () => { if (document.visibilityState === 'visible') cargarDatos(); };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
     cargarDatos();
   }, []);
 
