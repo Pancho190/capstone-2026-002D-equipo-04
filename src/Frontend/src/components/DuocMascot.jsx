@@ -4,13 +4,12 @@ export default function DuocMascot({ size = 60 }) {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
-    <div className="duoc-mascot" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', position: 'relative' }}>
+    <div className="duoc-mascot" style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 999, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
       {showDialog && (
         <div style={{
           position: 'absolute',
           bottom: '100%',
-          left: '50%',
-          transform: 'translateX(-50%)',
+          right: 0,
           marginBottom: '0.5rem',
           background: '#FFFFFF',
           border: '2px solid #1A1A1A',
