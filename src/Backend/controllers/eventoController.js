@@ -3,6 +3,26 @@ const prisma = require('../lib/prisma');
 
 const TIPOS = ['Japan', 'Cafeína', 'Sobremesa', 'Asesoría vocacional', 'Ventana vocacional'];
 
+// Convertir fecha local de Chile (UTC-3/UTC-4) a UTC para almacenar en la BD
+function getChileOffset(date) {
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Santiago',
+    timeZoneName: 'shortOffset'
+  });
+  const parts = formatter.formatToParts(date);
+  const offsetPart = parts.find(p => p.type === 'timeZoneName');
+  const match = offsetPart.value.match(/GMT([+-]\d+)/);
+  return match ? parseInt(match[1]) : -3;
+}
+
+function parseChileDate(dateString) {
+  if (!dateString) return null;
+  const date = new Date(dateString + 'Z');
+  const offset = getChileOffset(date);
+  return new Date(date.getTime() + Math.abs(offset) * 60 * 60 * 1000);
+}
+
+
 const crearEvento = async (req, res) => {
   try {
     const { nombre, fecha_inicio, fecha_fin, ubicacion, tipo } = req.body;
@@ -13,7 +33,7 @@ const crearEvento = async (req, res) => {
       return res.status(400).json({ error: 'Tipo de actividad no válido.' });
     }
     const evento = await prisma.evento.create({
-      data: { nombre, fecha_inicio: new Date(fecha_inicio), fecha_fin: new Date(fecha_fin), ubicacion, tipo }
+      data: { nombre, fecha_inicio: parseChileDate(fecha_inicio), fecha_fin: parseChileDate(fecha_fin), ubicacion, tipo }
     });
     res.status(201).json({ mensaje: 'Actividad creada', evento });
   } catch (error) {
@@ -60,13 +80,13 @@ const actualizarEvento = async (req, res) => {
       data.tipo = tipo;
     }
     if (fecha_inicio !== undefined) {
-      const d = new Date(fecha_inicio);
-      if (isNaN(d)) return res.status(400).json({ error: 'fecha_inicio inválida.' });
+      const d = parseChileDate(fecha_inicio);
+      if (!d || isNaN(d)) return res.status(400).json({ error: 'fecha_inicio inv�lida.' });
       data.fecha_inicio = d;
     }
     if (fecha_fin !== undefined) {
-      const d = new Date(fecha_fin);
-      if (isNaN(d)) return res.status(400).json({ error: 'fecha_fin inválida.' });
+      const d = parseChileDate(fecha_fin);
+      if (!d || isNaN(d)) return res.status(400).json({ error: 'fecha_fin inv�lida.' });
       data.fecha_fin = d;
     }
     const evento = await prisma.evento.update({ where: { id }, data });

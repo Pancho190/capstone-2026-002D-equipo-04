@@ -1,5 +1,25 @@
 ﻿const prisma = require('../lib/prisma');
 
+// Convertir fecha local de Chile a UTC para almacenar en la BD
+function getChileOffset(date) {
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Santiago',
+    timeZoneName: 'shortOffset'
+  });
+  const parts = formatter.formatToParts(date);
+  const offsetPart = parts.find(p => p.type === 'timeZoneName');
+  const match = offsetPart.value.match(/GMT([+-]\d+)/);
+  return match ? parseInt(match[1]) : -3;
+}
+
+function parseChileDate(dateString) {
+  if (!dateString) return null;
+  const date = new Date(dateString + 'Z');
+  const offset = getChileOffset(date);
+  return new Date(date.getTime() + Math.abs(offset) * 60 * 60 * 1000);
+}
+
+
 // Registrar un nuevo prospecto (Captura en terreno)
 const crearProspecto = async (req, res) => {
   try {
@@ -53,7 +73,7 @@ const crearProspecto = async (req, res) => {
       escuela: escuela || null,
       carrera_interes: carrera_interes || null,
       sede_preferencia: sede_preferencia || null,
-      fecha_nacimiento: fecha_nacimiento ? new Date(fecha_nacimiento) : null,
+      fecha_nacimiento: fecha_nacimiento ? parseChileDate(fecha_nacimiento) : null,
       ...(usuario_id ? { usuario: { connect: { id: usuario_id } } } : {})
     };
 
