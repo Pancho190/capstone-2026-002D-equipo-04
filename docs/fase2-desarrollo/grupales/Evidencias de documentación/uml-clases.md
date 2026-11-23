@@ -16,8 +16,18 @@ classDiagram
         +String rol
         +DateTime fecha_creacion
         +Prospecto[] prospectos
+        +EventoCaptador[] eventosAsignados
         +registrar() UsuarioAdmision
         +login() Token
+    }
+
+    class EventoCaptador {
+        +String id
+        +String evento_id
+        +String usuario_id
+        +DateTime fecha_asignacion
+        +Evento evento
+        +UsuarioAdmision usuario
     }
 
     class Prospecto {
@@ -55,9 +65,12 @@ classDiagram
         +String ubicacion
         +String tipo
         +Prospecto[] prospectos
+        +EventoCaptador[] captadores
         +crear() Evento
         +editar() Evento
         +validarVentana() Boolean
+        +asignarCaptador() EventoCaptador
+        +desasignarCaptador() void
     }
 
     class Carrera {
@@ -75,9 +88,13 @@ classDiagram
     }
 
     UsuarioAdmision "1" --> "*" Prospecto : captura
+    UsuarioAdmision "1" --> "*" EventoCaptador : asignado
     Evento "1" --> "*" Prospecto : en
+    Evento "1" --> "*" EventoCaptador : tiene
     Carrera "1" --> "*" Prospecto : interes
     Sede "1" --> "*" Prospecto : pertenece
+    EventoCaptador "*" --> "1" UsuarioAdmision : usuario
+    EventoCaptador "*" --> "1" Evento : evento
 ```
 
 ## Clases de control (Backend)
@@ -85,8 +102,16 @@ classDiagram
 ```mermaid
 classDiagram
     class AuthController {
+        +registrarUsuario(req, res) Response
+        +loginUsuario(req, res) Response
+        +obtenerUsuarios(req, res) Response
+    }
+
+    class ProspectoController {
         +crearProspecto(req, res) Response
         +obtenerProspectos(req, res) Response
+        +obtenerMisProspectos(req, res) Response
+        +obtenerInscritosPorEvento(req, res) Response
         +exportProspectos(req, res) Response
         +obtenerDuplicados(req, res) Response
     }
@@ -94,8 +119,14 @@ classDiagram
     class EventoController {
         +crearEvento(req, res) Response
         +obtenerEventos(req, res) Response
-        +editarEvento(req, res) Response
+        +obtenerEvento(req, res) Response
+        +actualizarEvento(req, res) Response
         +validarVentana(evento) Boolean
+        +obtenerEventosActivos(req, res) Response
+        +obtenerMisEventos(req, res) Response
+        +asignarCaptador(req, res) Response
+        +desasignarCaptador(req, res) Response
+        +obtenerCaptadoresPorEvento(req, res) Response
     }
 
     class AuthMiddleware {
@@ -129,10 +160,28 @@ classDiagram
         +Evento[] eventos
         +Duplicado[] duplicados
         +Filtros filtros
+        +Captador[] captadores
         +cargarDatos() void
         +verProspectos(evento) void
         +exportarCSV() void
         +limpiarFiltros() void
+        +abrirAsignar(evento) void
+        +asignarCaptador() void
+        +desasignarCaptador() void
+    }
+
+    class CaptadorDashboard {
+        +Prospecto[] prospectos
+        +Evento[] eventos
+        +Prospecto[] inscritos
+        +Evento selectedEvento
+        +cargarDatos() void
+        +verInscritos(evento) void
+    }
+
+    class DuocMascot {
+        +Boolean showDialog
+        +onClick() void
     }
 
     class Scanner {
@@ -160,7 +209,12 @@ classDiagram
 
     AdminDashboard --> ProspectDetailModal : muestra
     AdminDashboard --> DetailCharts : muestra
+    AdminDashboard --> DuocMascot : muestra
+    CaptadorDashboard --> ProspectDetailModal : muestra
+    CaptadorDashboard --> DetailCharts : muestra
+    CaptadorDashboard --> DuocMascot : muestra
     ProspectoForm --> Scanner : usa
     ProspectoForm --> ConsentModal : usa
+    ProspectoForm --> DuocMascot : muestra
 ```
 `, "docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-clases.md")

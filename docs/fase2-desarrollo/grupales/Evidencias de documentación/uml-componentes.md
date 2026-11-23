@@ -99,8 +99,10 @@ graph TB
 | Componente | Tipo | Descripción |
 |---|---|---|
 | `ProspectoForm` | Página | Formulario de captura con cascading selects y escaneo |
-| `AdminDashboard` | Página | Panel admin con filtros, KPIs, tabla, gráficos |
-| `AdminLogin` | Página | Login del panel admin |
+| `AdminDashboard` | Página | Panel admin con filtros, KPIs, tabla, gráficos, asignación de captadores |
+| `AdminLogin` | Página | Login del panel admin (redirección por rol) |
+| `CaptadorDashboard` | Página | Panel de captador con KPIs, actividades asignadas, inscritos, prospectos |
+| `DuocMascot` | Componente | Mascota animada de Duoc UC con diálogo |
 | `Scanner` | Componente | Escaneo de cédula (PDF417/MRZ) con @zxing |
 | `ConsentModal` | Componente | Modal de consentimiento de datos |
 | `EventForm` | Componente | Formulario CRUD de actividades |
@@ -118,10 +120,33 @@ graph TB
 | `prospectoRoutes` | Router | Rutas de prospectos (/api/prospectos) |
 | `eventoRoutes` | Router | Rutas de eventos (/api/eventos) |
 | `authController` | Controller | Lógica de registro y login |
-| `prospectoController` | Controller | Lógica de prospectos (crear, listar, filtrar, exportar, duplicados) |
-| `eventoController` | Controller | Lógica de eventos (CRUD, validación de ventana) |
+| `prospectoController` | Controller | Lógica de prospectos (crear, listar, filtrar, exportar, duplicados, mis prospectos, inscritos por evento) |
+| `eventoController` | Controller | Lógica de eventos (CRUD, validación de ventana, activos, mis eventos, asignar/desasignar captador) |
+| `authController` | Controller | Lógica de autenticación (registro, login, listar usuarios) |
 | `authMiddleware` | Middleware | Verificación JWT y rol ADMIN |
 | `prisma.js` | Librería | Singleton de Prisma Client |
+
+## Endpoints de la API
+
+| Método | Ruta | Descripción | Auth |
+|---|---|---|---|
+| POST | `/api/auth/registro` | Registrar usuario | No |
+| POST | `/api/auth/login` | Iniciar sesión | No |
+| GET | `/api/auth/usuarios` | Listar usuarios | Admin |
+| POST | `/api/prospectos` | Crear prospecto (público) | No |
+| GET | `/api/prospectos` | Listar prospectos (filtros + paginación) | JWT |
+| GET | `/api/prospectos/mis` | Listar prospectos del captador | JWT |
+| GET | `/api/prospectos/evento/:id` | Listar inscritos de una actividad | JWT |
+| GET | `/api/prospectos/export` | Exportar a CSV | Admin |
+| GET | `/api/prospectos/duplicados` | Listar prospectos duplicados | Admin |
+| GET | `/api/eventos` | Listar actividades | No |
+| GET | `/api/eventos/activos` | Listar actividades activas | JWT |
+| GET | `/api/eventos/mis` | Listar actividades asignadas al captador | JWT |
+| GET | `/api/eventos/:id/captadores` | Listar captadores de una actividad | Admin |
+| POST | `/api/eventos` | Crear actividad | Admin |
+| PUT | `/api/eventos/:id` | Editar actividad | Admin |
+| POST | `/api/eventos/:id/asignar` | Asignar captador a actividad | Admin |
+| DELETE | `/api/eventos/:id/asignar/:userId` | Desasignar captador | Admin |
 
 ## Infraestructura
 

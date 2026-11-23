@@ -95,4 +95,48 @@ sequenceDiagram
     API-->>Dashboard: Lista de duplicados con actividades
     Dashboard-->>Admin: Tabla de prospectos duplicados
 ```
+
+## Flujo 5: Asignación de captador a actividad
+
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant Dashboard as AdminDashboard
+    participant API as Backend API
+    participant DB as PostgreSQL
+
+    Admin->>Dashboard: Clic en "Asignar" en actividad
+    Dashboard->>API: GET /api/eventos/:id/captadores (JWT token)
+    API->>API: Verificar token + rol ADMIN
+    API->>DB: findMany EventoCaptador (where evento_id)
+    DB-->>API: Lista de captadores asignados
+    API-->>Dashboard: Lista de captadores
+    Dashboard-->>Admin: Modal con captadores asignados + dropdown
+
+    Admin->>Dashboard: Selecciona captador y clic "Asignar"
+    Dashboard->>API: POST /api/eventos/:id/asignar { usuario_id }
+    API->>API: Verificar token + rol ADMIN
+    API->>DB: create EventoCaptador (evento_id, usuario_id)
+    DB-->>API: Asignación creada
+    API-->>Dashboard: 201 Created
+    Dashboard-->>Admin: Actualiza lista de captadores asignados
+```
+
+## Flujo 6: Vista de inscritos por actividad (Captador)
+
+```mermaid
+sequenceDiagram
+    actor Captador
+    participant Dashboard as CaptadorDashboard
+    participant API as Backend API
+    participant DB as PostgreSQL
+
+    Captador->>Dashboard: Clic en "Ver inscritos" en actividad asignada
+    Dashboard->>API: GET /api/prospectos/evento/:id (JWT token)
+    API->>API: Verificar token
+    API->>DB: findMany (where evento_id = id)
+    DB-->>API: Lista de prospectos inscritos
+    API-->>Dashboard: { data, total }
+    Dashboard-->>Captador: Tabla con RUT, nombre, correo, teléfono, fecha captura
+```
 `, "docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-secuencia.md")

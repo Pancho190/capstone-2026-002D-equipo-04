@@ -72,13 +72,25 @@ El frontend quedará en `https://localhost:5173/`.
 ### Prospectos
 - `POST /api/prospectos` — Crear prospecto (público)
 - `GET /api/prospectos` — Listar prospectos (filtros + paginación, requiere JWT)
+- `GET /api/prospectos/mis` — Listar prospectos del captador logueado (JWT)
+- `GET /api/prospectos/evento/:id` — Listar inscritos de una actividad (JWT)
 - `GET /api/prospectos/export` — Exportar a CSV (solo admin)
+- `GET /api/prospectos/duplicados` — Listar prospectos duplicados (solo admin)
 
 ### Actividades
 - `GET /api/eventos` - Listar actividades
+- `GET /api/eventos/activos` - Listar actividades activas (JWT)
+- `GET /api/eventos/mis` - Listar actividades asignadas al captador (JWT)
+- `GET /api/eventos/:id/captadores` - Listar captadores de una actividad (admin)
 - `POST /api/eventos` - Crear actividad (solo admin)
 - `PUT /api/eventos/:id` - Editar actividad (solo admin)
-- `GET /api/prospectos/duplicados` - Listar prospectos duplicados (solo admin)
+- `POST /api/eventos/:id/asignar` - Asignar captador a actividad (admin)
+- `DELETE /api/eventos/:id/asignar/:userId` - Desasignar captador (admin)
+
+### Usuarios
+- `POST /api/auth/registro` — Registrar usuario
+- `POST /api/auth/login` — Iniciar sesión
+- `GET /api/auth/usuarios` — Listar usuarios (admin)
 
 ### Filtros en prospectos
 `GET /api/prospectos?desde=2026-11-01&hasta=2026-11-30&evento_id=UUID&tipo=Japan&mes=11&dia=15&page=1&limit=20`
@@ -90,7 +102,13 @@ El frontend quedará en `https://localhost:5173/`.
 - **URL local:** `https://localhost:5173/admin/login`
 - **URL producción:** https://capstone-admision.vercel.app/admin/login
 - **Credenciales iniciales:** `admin@duoc.cl` / `Admin123!`
-- **Funcionalidades:** filtros por fecha/actividad/tipo/mes/día/periodo, tabla de prospectos, modal de detalle, gráficos, exportar CSV, CRUD de actividades, detección de duplicados, generación de QR.
+- **Funcionalidades:** filtros por fecha/actividad/tipo/mes/día/periodo, tabla de prospectos, modal de detalle, gráficos, exportar CSV, CRUD de actividades, detección de duplicados, generación de QR, asignación de captadores a actividades.
+
+## Panel de captador
+- **URL local:** `https://localhost:5173/captador`
+- **URL producción:** https://capstone-admision.vercel.app/captador
+- **Credenciales:** Usuario con rol CAPTADOR (ej: captador@duoc.cl / Captador123!)
+- **Funcionalidades:** KPIs personales (total, hoy, esta semana), actividades asignadas (con fechas, ubicación, tipo), tabla de inscritos por actividad, tabla de prospectos capturados, gráficos, modal de detalle, generación de QR.
 
 ## Despliegue en producción
 - **Frontend:** Vercel (https://capstone-admision.vercel.app/)

@@ -23,8 +23,8 @@ capstone-2026-002D-equipo-04/
 │   │   └── server.js          # Entry point
 │   └── Frontend/
 │       ├── src/
-│       │   ├── components/    # Scanner, ConsentModal, EventForm, QRModal, ActivityChart, ChartsSection, DetailCharts, ProspectDetailModal
-│       │   ├── pages/         # ProspectoForm, AdminLogin, AdminDashboard
+│       │   ├── components/    # Scanner, ConsentModal, EventForm, QRModal, ActivityChart, ChartsSection, DetailCharts, ProspectDetailModal, DuocMascot
+│       │   ├── pages/         # ProspectoForm, AdminLogin, AdminDashboard, CaptadorDashboard
 │       │   ├── data/          # Escuelas, sedes, regiones
 │       │   └── offline.js     # Almacenamiento offline
 │       └── vite.config.js     # Config Vite + PWA + HTTPS
@@ -101,13 +101,21 @@ npm run dev -- --host
 |---|---|---|---|
 | POST | `/api/auth/registro` | Registrar usuario | No |
 | POST | `/api/auth/login` | Iniciar sesión | No |
+| GET | `/api/auth/usuarios` | Listar usuarios | Admin |
 | POST | `/api/prospectos` | Crear prospecto | No (público) |
 | GET | `/api/prospectos` | Listar prospectos (filtros + paginación) | Sí (JWT) |
+| GET | `/api/prospectos/mis` | Listar prospectos del captador logueado | Sí (JWT) |
+| GET | `/api/prospectos/evento/:id` | Listar inscritos de una actividad | Sí (JWT) |
 | GET | `/api/prospectos/export` | Exportar a CSV | Admin |
 | GET | `/api/prospectos/duplicados` | Listar prospectos duplicados | Admin |
 | GET | `/api/eventos` | Listar actividades | No |
+| GET | `/api/eventos/activos` | Listar actividades activas | Sí (JWT) |
+| GET | `/api/eventos/mis` | Listar actividades asignadas al captador | Sí (JWT) |
+| GET | `/api/eventos/:id/captadores` | Listar captadores de una actividad | Admin |
 | POST | `/api/eventos` | Crear actividad | Admin |
 | PUT | `/api/eventos/:id` | Editar actividad | Admin |
+| POST | `/api/eventos/:id/asignar` | Asignar captador a actividad | Admin |
+| DELETE | `/api/eventos/:id/asignar/:userId` | Desasignar captador | Admin |
 | DELETE | `/api/eventos/:id` | Eliminar actividad | Admin |
 
 ### Filtros en prospectos
