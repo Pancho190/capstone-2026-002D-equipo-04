@@ -94,7 +94,6 @@ npm run dev -- --host
 - **Panel admin:** https://capstone-admision.vercel.app/admin/login
 - **Backend API:** https://capstone-backend-so19.onrender.com/
 - **Base de datos:** https://console.neon.tech (Neon)
-- **Credenciales admin:** admin@duoc.cl / Admin123!
 
 ## 5. Endpoints de la API
 | Método | Ruta | Descripción | Auth |
@@ -160,7 +159,7 @@ Scrum
 - `docs/fase2-desarrollo/grupales/Evidencias de documentación/inicio-proyecto.md` — Documento de inicio
 - `docs/agile/` — Product Vision, Backlog, Sprint, DoD, retrospectiva
 - `docs/fase2-desarrollo/grupales/Evidencias de documentación/Plan de Pruebas.md` — Plan de pruebas (Jest + Supertest)
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/` — Copia de docs/ para evaluación MICO
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/` — Copia de docs
 - `docs/fase2-desarrollo/grupales/Evidencias de sistema (Aplicación - Base de datos)/` — Schema Prisma + capturas de pantalla
 
 ---
