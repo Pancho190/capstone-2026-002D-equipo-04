@@ -3,16 +3,27 @@
 } from 'recharts';
 
 const SCHOOL_COLORS = {
-  'Administración y Negocios': '#D50032',
-  'Comunicación': '#E87722',
-  'Construcción': '#C4D600',
-  'Diseño': '#FF585D',
-  'Gastronomía': '#FF585D',
-  'Informática y Telecomunicaciones': '#307FE2',
-  'Ingeniería y Recursos Naturales': '#43B02A',
-  'Salud': '#5BC2E7',
-  'Turismo': '#00A499',
+  'ADMINISTRACIÓN Y NEGOCIOS': '#AC4FC6',
+  'COMUNICACIÓN': '#D50032',
+  'CONSTRUCCIÓN': '#E87722',
+  'DISEÑO': '#C4D600',
+  'GASTRONOMÍA': '#FF585D',
+  'INFORMÁTICA Y TELECOMUNICACIONES': '#307FE2',
+  'INGENIERÍA': '#43B02A',
+  'RECURSOS NATURALES': '#43B02A',
+  'SALUD': '#5BC2E7',
+  'TURISMO': '#00A499',
 };
+
+function getSchoolColor(school) {
+  if (!school) return null;
+  const upper = school.toUpperCase().trim();
+  if (SCHOOL_COLORS[upper]) return SCHOOL_COLORS[upper];
+  for (const [key, color] of Object.entries(SCHOOL_COLORS)) {
+    if (upper.includes(key) || key.includes(upper)) return color;
+  }
+  return null;
+}
 
 const DUOC_PALETTE = ['#1A1A1A', '#307FE2', '#FFB800', '#43B02A', '#5BC2E7', '#666666', '#D50032', '#00A499', '#E87722', '#C4D600'];
 
