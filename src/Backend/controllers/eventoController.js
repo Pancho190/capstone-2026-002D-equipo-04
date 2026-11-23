@@ -177,4 +177,24 @@ const obtenerCaptadoresPorEvento = async (req, res) => {
   }
 };
 
-module.exports = { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, obtenerEventosActivos, obtenerMisEventos, asignarCaptador, desasignarCaptador, obtenerCaptadoresPorEvento };
+const eliminarEvento = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const evento = await prisma.evento.findUnique({ where: { id } });
+    if (!evento) {
+      return res.status(404).json({ error: 'Actividad no encontrada.' });
+    }
+    // Eliminar prospectos asociados, asignaciones y luego el evento (transaccion)
+    await prisma.$transaction([
+      prisma.prospecto.deleteMany({ where: { evento_id: id } }),
+      prisma.eventoCaptador.deleteMany({ where: { evento_id: id } }),
+      prisma.evento.delete({ where: { id } })
+    ]);
+    res.json({ mensaje: 'Actividad y prospectos asociados eliminados.' });
+  } catch (error) {
+    console.error('Error al eliminar evento:', error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+};
+
+module.exports = { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, obtenerEventosActivos, obtenerMisEventos, asignarCaptador, desasignarCaptador, obtenerCaptadoresPorEvento, eliminarEvento };
