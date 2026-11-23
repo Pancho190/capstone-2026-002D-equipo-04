@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ export default function AdminLogin() {
     e.preventDefault();
     try {
       const res = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', res.data.token);
+      sessionStorage.setItem('token', res.data.token);
       if (res.data.usuario.rol === 'ADMIN') {
         navigate('/admin');
       } else {

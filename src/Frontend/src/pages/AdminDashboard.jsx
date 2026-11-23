@@ -36,7 +36,7 @@ export default function AdminDashboard() {
   });
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (!token) { navigate('/admin/login'); return; }
     cargarDatos();
   }, []);
@@ -137,7 +137,7 @@ export default function AdminDashboard() {
           <span style={{ fontSize: '0.8rem', color: '#666666' }}>Consulta las actividades y accede a sus prospectos.</span>
         </div>
         <div className="admin-header-actions">
-          <button onClick={() => { localStorage.removeItem('token'); navigate('/admin/login'); }} className="ghost" style={{ color: '#1A1A1A', border: '1px solid #CCCCCC', background: '#ffffff', height: '36px', fontSize: '0.85rem', padding: '0 1rem' }}>
+          <button onClick={() => { sessionStorage.removeItem('token'); navigate('/admin/login'); }} className="ghost" style={{ color: '#1A1A1A', border: '1px solid #CCCCCC', background: '#ffffff', height: '36px', fontSize: '0.85rem', padding: '0 1rem' }}>
             Cerrar sesión
           </button>
         </div>
