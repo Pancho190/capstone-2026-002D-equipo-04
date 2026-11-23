@@ -1,4 +1,5 @@
 ﻿import { useEffect, useRef } from 'react';
+import { formatDateCL } from '../utils';
 
 export default function ProspectDetailModal({ prospecto, onClose }) {
   const modalRef = useRef(null);
@@ -57,7 +58,7 @@ export default function ProspectDetailModal({ prospecto, onClose }) {
     { label: 'Nombres', value: prospecto.nombre_completo },
     { label: 'Apellido', value: prospecto.apellidos },
     { label: 'Género', value: prospecto.genero },
-    { label: 'Fecha nacimiento', value: prospecto.fecha_nacimiento ? new Date(prospecto.fecha_nacimiento).toLocaleDateString() : '-' },
+    { label: 'Fecha nacimiento', value: prospecto.fecha_nacimiento ? formatDateCL(prospecto.fecha_nacimiento) : '-' },
     { label: 'Región', value: prospecto.region },
     { label: 'Comuna', value: prospecto.comuna },
     { label: 'Año en curso', value: anioLabels[prospecto.anio_curso] || prospecto.anio_curso || '-' },
@@ -68,7 +69,7 @@ export default function ProspectDetailModal({ prospecto, onClose }) {
     { label: 'Email', value: prospecto.correo },
     { label: 'Teléfono', value: prospecto.telefono },
     { label: 'Actividad', value: prospecto.evento?.nombre },
-    { label: 'Fecha captura', value: new Date(prospecto.fecha_captura).toLocaleString() }
+    { label: 'Fecha captura', value: formatDateCL(prospecto.fecha_captura, true) }
   ];
 
   return (

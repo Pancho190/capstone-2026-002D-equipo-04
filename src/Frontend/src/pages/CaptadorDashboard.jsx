@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 const DetailCharts = lazy(() => import('../components/DetailCharts'));
 import ProspectDetailModal from '../components/ProspectDetailModal';
+import { formatDateCL } from '../utils';
 
 export default function CaptadorDashboard() {
   const [prospectos, setProspectos] = useState([]);
@@ -113,8 +114,8 @@ export default function CaptadorDashboard() {
                 <div key={e.id} style={{ flex: 1, minWidth: 280, background: '#FFFFFF', border: '1px solid #CCCCCC', borderRadius: '4px', padding: '1rem', boxShadow: '0 2px 8px rgba(26,26,26,0.08)' }}>
                   <h4 style={{ margin: 0, color: '#1A1A1A', fontSize: '1rem', fontWeight: 700 }}>{e.nombre}</h4>
                   <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Tipo: {e.tipo}</p>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Inicio: {new Date(e.fecha_inicio).toLocaleString()}</p>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Fin: {new Date(e.fecha_fin).toLocaleString()}</p>
+                  <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Inicio: {formatDateCL(e.fecha_inicio, true)}</p>
+                  <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Fin: {formatDateCL(e.fecha_fin, true)}</p>
                   <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Ubicación: {e.ubicacion}</p>
                   <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
                     <a
@@ -167,7 +168,7 @@ export default function CaptadorDashboard() {
                           <td style={{ padding: '0.5rem' }}>{p.nombre_completo}</td>
                           <td style={{ padding: '0.5rem' }}>{p.correo || '-'}</td>
                           <td style={{ padding: '0.5rem' }}>{p.telefono || '-'}</td>
-                          <td style={{ padding: '0.5rem' }}>{new Date(p.fecha_captura).toLocaleString()}</td>
+                          <td style={{ padding: '0.5rem' }}>{formatDateCL(p.fecha_captura, true)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -199,7 +200,7 @@ export default function CaptadorDashboard() {
                     <td style={{ padding: '0.5rem' }}>{p.rut}</td>
                     <td style={{ padding: '0.5rem' }}>{p.nombre_completo}</td>
                     <td style={{ padding: '0.5rem' }}>{p.evento?.nombre || 'Sin actividad'}</td>
-                    <td style={{ padding: '0.5rem' }}>{new Date(p.fecha_captura).toLocaleDateString()}</td>
+                    <td style={{ padding: '0.5rem' }}>{formatDateCL(p.fecha_captura)}</td>
                     <td style={{ padding: '0.5rem' }}>
                       <button className="ghost" onClick={() => setSelectedProspect(p)} style={{ fontSize: '0.85rem' }} aria-label="Ver detalle del prospecto">Ver</button>
                     </td>

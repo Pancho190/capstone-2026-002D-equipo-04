@@ -46,6 +46,23 @@ export function formatFecha(value) {
   if (cleaned.length <= 4) return `${cleaned.slice(0, 2)}-${cleaned.slice(2)}`;
   return `${cleaned.slice(0, 2)}-${cleaned.slice(2, 4)}-${cleaned.slice(4, 8)}`;
 }
+// Convertir fecha UTC a hora local de Chile para mostrar
+export function formatDateCL(dateString, includeTime = false) {
+  if (!dateString) return '-';
+  const date = new Date(dateString);
+  const options = {
+    timeZone: 'America/Santiago',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  };
+  if (includeTime) {
+    options.hour = '2-digit';
+    options.minute = '2-digit';
+  }
+  return date.toLocaleString('es-CL', options);
+}
+
 export function toISODate(input) {
   if (!input) return null;
   const m = input.trim().match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{2}|\d{4})$/);

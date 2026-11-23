@@ -8,6 +8,7 @@ const ChartsSection = lazy(() => import('../components/ChartsSection'));
 const DetailCharts = lazy(() => import('../components/DetailCharts'));
 import ProspectDetailModal from '../components/ProspectDetailModal';
 import DuocMascot from '../components/DuocMascot';
+import { formatDateCL } from '../utils';
 
 export default function AdminDashboard() {
   const [prospectos, setProspectos] = useState([]);
@@ -321,7 +322,7 @@ export default function AdminDashboard() {
                       <tr key={e.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
                         <td style={{ padding: '0.5rem' }}>{e.nombre}</td>
                         <td style={{ padding: '0.5rem' }}>{e.tipo}</td>
-                        <td style={{ padding: '0.5rem' }}>{new Date(e.fecha_inicio).toLocaleDateString()}</td>
+                        <td style={{ padding: '0.5rem' }}>{formatDateCL(e.fecha_inicio)}</td>
                         <td style={{ padding: '0.5rem' }}>{prospectos.filter((p) => p.evento_id === e.id).length}</td>
                         <td style={{ padding: '0.5rem' }}>
                           {prospectos.filter((p) => p.evento_id === e.id && duplicados.some((d) => d.rut === p.rut)).length}
@@ -364,7 +365,7 @@ export default function AdminDashboard() {
                         <td style={{ padding: '0.5rem' }}>{d.rut}</td>
                         <td style={{ padding: '0.5rem' }}>{d.nombre}</td>
                         <td style={{ padding: '0.5rem' }}>{d.actividades.map((a) => a.nombre).join(', ')}</td>
-                        <td style={{ padding: '0.5rem' }}>{new Date(d.primera_captura).toLocaleDateString()}</td>
+                        <td style={{ padding: '0.5rem' }}>{formatDateCL(d.primera_captura)}</td>
                       </tr>
                     ))}
                   </tbody>
