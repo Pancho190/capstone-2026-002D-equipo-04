@@ -10,6 +10,9 @@ export default function CaptadorDashboard() {
   const [eventos, setEventos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProspect, setSelectedProspect] = useState(null);
+  const [selectedEvento, setSelectedEvento] = useState(null);
+  const [inscritos, setInscritos] = useState([]);
+  const [loadingInscritos, setLoadingInscritos] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +25,7 @@ export default function CaptadorDashboard() {
     try {
       const [prosRes, evRes] = await Promise.all([
         api.get('/prospectos/mis'),
-        api.get('/eventos/activos')
+        api.get('/eventos/mis')
       ]);
       setProspectos(prosRes.data.data || prosRes.data);
       setEventos(evRes.data);
@@ -30,6 +33,19 @@ export default function CaptadorDashboard() {
       if (err.response?.status === 401 || err.response?.status === 403) navigate('/login');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const verInscritos = async (evento) => {
+    setSelectedEvento(evento);
+    setLoadingInscritos(true);
+    try {
+      const res = await api.get(`/prospectos/evento/${evento.id}`);
+      setInscritos(res.data.data || res.data);
+    } catch (err) {
+      setInscritos([]);
+    } finally {
+      setLoadingInscritos(false);
     }
   };
 
@@ -88,25 +104,78 @@ export default function CaptadorDashboard() {
           </div>
         </div>
 
-        {/* Actividades disponibles */}
+        {/* Mis actividades asignadas */}
         {eventos.length > 0 && (
           <div style={{ marginBottom: '1.5rem' }}>
-            <h3 style={{ color: '#1A1A1A', marginBottom: '0.75rem', fontSize: '1.1rem', fontWeight: 700 }}>Actividades disponibles</h3>
+            <h3 style={{ color: '#1A1A1A', marginBottom: '0.75rem', fontSize: '1.1rem', fontWeight: 700 }}>Mis actividades asignadas</h3>
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               {eventos.map((e) => (
-                <div key={e.id} style={{ flex: 1, minWidth: 250, background: '#FFFFFF', border: '1px solid #CCCCCC', borderRadius: '4px', padding: '1rem', boxShadow: '0 2px 8px rgba(26,26,26,0.08)' }}>
+                <div key={e.id} style={{ flex: 1, minWidth: 280, background: '#FFFFFF', border: '1px solid #CCCCCC', borderRadius: '4px', padding: '1rem', boxShadow: '0 2px 8px rgba(26,26,26,0.08)' }}>
                   <h4 style={{ margin: 0, color: '#1A1A1A', fontSize: '1rem', fontWeight: 700 }}>{e.nombre}</h4>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>{e.tipo} — {new Date(e.fecha_inicio).toLocaleDateString()}</p>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>{e.ubicacion}</p>
-                  <a
-                    href={`/?evento_id=${e.id}`}
-                    style={{ display: 'inline-block', marginTop: '0.5rem', padding: '0.5rem 1rem', background: '#FFB800', color: '#1A1A1A', borderRadius: '100px', fontWeight: 700, fontSize: '0.85rem', textDecoration: 'none' }}
-                  >
-                    Capturar prospecto
-                  </a>
+                  <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Tipo: {e.tipo}</p>
+                  <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Inicio: {new Date(e.fecha_inicio).toLocaleString()}</p>
+                  <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Fin: {new Date(e.fecha_fin).toLocaleString()}</p>
+                  <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Ubicación: {e.ubicacion}</p>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
+                    <a
+                      href={`/?evento_id=${e.id}`}
+                      style={{ display: 'inline-block', padding: '0.5rem 1rem', background: '#FFB800', color: '#1A1A1A', borderRadius: '100px', fontWeight: 700, fontSize: '0.85rem', textDecoration: 'none' }}
+                    >
+                      Capturar prospecto
+                    </a>
+                    <button
+                      className="ghost"
+                      onClick={() => verInscritos(e)}
+                      style={{ fontSize: '0.85rem', height: '36px', padding: '0 1rem' }}
+                      aria-label="Ver inscritos de la actividad"
+                    >
+                      Ver inscritos
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Tabla de inscritos por actividad seleccionada */}
+        {selectedEvento && (
+          <div style={{ background: '#FFFFFF', border: '1px solid #CCCCCC', borderRadius: '4px', padding: '1.25rem', boxShadow: '0 2px 8px rgba(26,26,26,0.08)', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+              <h3 style={{ color: '#1A1A1A', margin: 0, fontSize: '1.1rem', fontWeight: 700 }}>Inscritos en: {selectedEvento.nombre}</h3>
+              <button className="ghost" onClick={() => { setSelectedEvento(null); setInscritos([]); }} style={{ fontSize: '0.85rem', height: '32px', padding: '0 0.75rem' }}>Cerrar</button>
+            </div>
+            {loadingInscritos ? (
+              <p style={{ textAlign: 'center', padding: '1rem', color: '#666666' }}>Cargando inscritos...</p>
+            ) : (
+              <>
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid #1A1A1A', background: '#EEEEEE' }}>
+                        <th style={{ padding: '0.5rem', textAlign: 'left' }}>RUT</th>
+                        <th style={{ padding: '0.5rem', textAlign: 'left' }}>Nombre</th>
+                        <th style={{ padding: '0.5rem', textAlign: 'left' }}>Correo</th>
+                        <th style={{ padding: '0.5rem', textAlign: 'left' }}>Teléfono</th>
+                        <th style={{ padding: '0.5rem', textAlign: 'left' }}>Fecha captura</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {inscritos.map((p) => (
+                        <tr key={p.id} style={{ borderBottom: '1px solid #CCCCCC' }}>
+                          <td style={{ padding: '0.5rem' }}>{p.rut}</td>
+                          <td style={{ padding: '0.5rem' }}>{p.nombre_completo}</td>
+                          <td style={{ padding: '0.5rem' }}>{p.correo || '-'}</td>
+                          <td style={{ padding: '0.5rem' }}>{p.telefono || '-'}</td>
+                          <td style={{ padding: '0.5rem' }}>{new Date(p.fecha_captura).toLocaleString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {inscritos.length === 0 && <p style={{ textAlign: 'center', padding: '1rem', color: '#666666' }}>No hay inscritos en esta actividad.</p>}
+                </div>
+              </>
+            )}
           </div>
         )}
 
