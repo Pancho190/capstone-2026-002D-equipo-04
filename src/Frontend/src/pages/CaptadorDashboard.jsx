@@ -132,7 +132,10 @@ export default function CaptadorDashboard() {
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               {eventos.map((e) => (
                 <div key={e.id} style={{ flex: 1, minWidth: 280, background: '#FFFFFF', border: '1px solid #CCCCCC', borderRadius: '4px', padding: '1rem', boxShadow: '0 2px 8px rgba(26,26,26,0.08)' }}>
-                  <h4 style={{ margin: 0, color: '#1A1A1A', fontSize: '1rem', fontWeight: 700 }}>{e.nombre}</h4>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                    <h4 style={{ margin: 0, color: '#1A1A1A', fontSize: '1rem', fontWeight: 700 }}>{e.nombre}</h4>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 600, padding: '0.2rem 0.6rem', borderRadius: '100px', background: getEstadoActividad(e).bg, color: getEstadoActividad(e).color }}>{getEstadoActividad(e).label}</span>
+                  </div>
                   <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Tipo: {e.tipo}</p>
                   <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Inicio: {formatDateCL(e.fecha_inicio, true)}</p>
                   <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: '#666666' }}>Fin: {formatDateCL(e.fecha_fin, true)}</p>
