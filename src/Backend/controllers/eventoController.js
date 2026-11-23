@@ -110,4 +110,24 @@ const obtenerMisEventos = async (req, res) => {
   }
 };
 
-module.exports = { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, obtenerEventosActivos, obtenerMisEventos };
+const asignarCaptador = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { usuario_id } = req.body;
+    if (!usuario_id) {
+      return res.status(400).json({ error: 'Falta usuario_id.' });
+    }
+    const asignacion = await prisma.eventoCaptador.create({
+      data: { evento_id: id, usuario_id }
+    });
+    res.status(201).json({ mensaje: 'Captador asignado', asignacion });
+  } catch (error) {
+    if (error.code === 'P2002') {
+      return res.status(409).json({ error: 'El captador ya esta asignado a esta actividad.' });
+    }
+    console.error('Error al asignar captador:', error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+};
+
+module.exports = { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, obtenerEventosActivos, obtenerMisEventos, asignarCaptador };
