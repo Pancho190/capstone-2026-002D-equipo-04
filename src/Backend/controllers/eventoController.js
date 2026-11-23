@@ -143,4 +143,18 @@ const desasignarCaptador = async (req, res) => {
   }
 };
 
-module.exports = { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, obtenerEventosActivos, obtenerMisEventos, asignarCaptador, desasignarCaptador };
+const obtenerCaptadoresPorEvento = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const asignaciones = await prisma.eventoCaptador.findMany({
+      where: { evento_id: id },
+      include: { usuario: { select: { id: true, nombre_completo: true, correo: true } } }
+    });
+    res.json(asignaciones.map((a) => a.usuario));
+  } catch (error) {
+    console.error('Error al obtener captadores:', error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+};
+
+module.exports = { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, obtenerEventosActivos, obtenerMisEventos, asignarCaptador, desasignarCaptador, obtenerCaptadoresPorEvento };

@@ -91,4 +91,17 @@ const loginUsuario = async (req, res) => {
   }
 };
 
-module.exports = { registrarUsuario, loginUsuario };
+const obtenerUsuarios = async (req, res) => {
+  try {
+    const usuarios = await prisma.usuarioAdmision.findMany({
+      select: { id: true, nombre_completo: true, correo: true, rol: true, rut: true },
+      orderBy: { fecha_creacion: 'desc' }
+    });
+    res.json(usuarios);
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+};
+
+module.exports = { registrarUsuario, loginUsuario, obtenerUsuarios };
