@@ -27,6 +27,9 @@ export default function AdminDashboard() {
   const [assignEvento, setAssignEvento] = useState(null);
   const [selectedCaptadorId, setSelectedCaptadorId] = useState('');
   const [assignedCaptadores, setAssignedCaptadores] = useState({});
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteEvento, setDeleteEvento] = useState(null);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const navigate = useNavigate();
 
   const filteredEventos = eventos.filter((e) => {
@@ -109,6 +112,25 @@ export default function AdminDashboard() {
       cargarDatos();
     } catch (err) {
       alert(err.response?.data?.error || 'Error al desasignar captador');
+    }
+  };
+
+  const abrirEliminar = (evento) => {
+    setDeleteEvento(evento);
+    setDeleteConfirmText('');
+    setShowDeleteModal(true);
+  };
+
+  const eliminarEvento = async () => {
+    if (!deleteEvento || deleteConfirmText !== deleteEvento.nombre) return;
+    try {
+      await api.delete(`/eventos/${deleteEvento.id}`);
+      setShowDeleteModal(false);
+      setDeleteEvento(null);
+      setDeleteConfirmText('');
+      cargarDatos();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Error al eliminar actividad');
     }
   };
 
@@ -270,6 +292,42 @@ export default function AdminDashboard() {
             </div>
           )}
 
+          {showDeleteModal && deleteEvento && (
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }} onClick={() => { setShowDeleteModal(false); setDeleteEvento(null); setDeleteConfirmText(''); }}>
+              <div onClick={(e) => e.stopPropagation()} style={{ background: '#FFFFFF', borderRadius: '4px', padding: '1.5rem', maxWidth: 480, width: '100%', boxShadow: '0 4px 24px rgba(26,26,26,0.12)' }}>
+                <h3 style={{ color: '#D50032', marginBottom: '1rem', fontSize: '1.1rem', fontWeight: 700 }}>Eliminar actividad</h3>
+                <p style={{ fontSize: '0.9rem', color: '#666666', marginBottom: '0.5rem' }}>
+                  Esta acción eliminará la actividad <strong>{deleteEvento.nombre}</strong> y todos los prospectos asociados. Esta acción es irreversible.
+                </p>
+                <p style={{ fontSize: '0.9rem', color: '#666666', marginBottom: '0.75rem' }}>
+                  Para confirmar, escribe el nombre de la actividad:
+                </p>
+                <input
+                  type="text"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  placeholder={deleteEvento.nombre}
+                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #CCCCCC', borderRadius: '4px', fontSize: '0.9rem' }}
+                />
+                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                  <button type="button" className="ghost" onClick={() => { setShowDeleteModal(false); setDeleteEvento(null); setDeleteConfirmText(''); }} style={{ height: '36px', fontSize: '0.85rem', padding: '0 1rem' }}>Cancelar</button>
+                  <button
+                    type="button"
+                    onClick={eliminarEvento}
+                    disabled={deleteConfirmText !== deleteEvento.nombre}
+                    style={{
+                      height: '36px', fontSize: '0.85rem', padding: '0 1rem',
+                      background: deleteConfirmText === deleteEvento.nombre ? '#D50032' : '#CCCCCC',
+                      color: '#FFFFFF', border: 'none', borderRadius: '100px', fontWeight: 700, cursor: deleteConfirmText === deleteEvento.nombre ? 'pointer' : 'not-allowed'
+                    }}
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="admin-kpi-grid">
             <div className="admin-kpi-card" style={{ background: '#ffffff', border: '1px solid #CCCCCC', borderRadius: '12px', padding: '1.25rem 1.5rem', boxShadow: '0 3px 6px rgba(10,36,69,0.04)', position: 'relative' }}>
               <p style={{ fontSize: '0.8rem', fontWeight: 500, color: '#666666', margin: 0 }}>Total {vista === 'detalle' ? 'en la actividad' : 'inscritos global'}</p>
@@ -332,6 +390,7 @@ export default function AdminDashboard() {
                           <button className="ghost" onClick={() => { setEditingEvent(e); setShowEventForm(true); }} style={{ marginLeft: '0.5rem', fontSize: '0.85rem' }} aria-label="Editar actividad">Editar</button>
                           <button className="ghost" onClick={() => { setQrEvento(e); setShowQR(true); }} style={{ marginLeft: '0.5rem', fontSize: '0.85rem' }} aria-label="Generar código QR">QR</button>
                           <button className="ghost" onClick={() => abrirAsignar(e)} style={{ marginLeft: '0.5rem', fontSize: '0.85rem' }} aria-label="Asignar captador a la actividad">Asignar</button>
+                          <button className="ghost" onClick={() => abrirEliminar(e)} style={{ marginLeft: '0.5rem', fontSize: '0.85rem', color: '#D50032', borderColor: '#D50032' }} aria-label="Eliminar actividad">Eliminar</button>
                         </td>
                       </tr>
                     ))}
