@@ -78,4 +78,21 @@ const actualizarEvento = async (req, res) => {
 };
 
 
-module.exports = { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento };
+const obtenerEventosActivos = async (req, res) => {
+  try {
+    const now = new Date();
+    const eventos = await prisma.evento.findMany({
+      where: {
+        fecha_inicio: { lte: now },
+        fecha_fin: { gte: now }
+      },
+      orderBy: { fecha_inicio: 'asc' }
+    });
+    res.json(eventos);
+  } catch (error) {
+    console.error('Error al obtener eventos activos:', error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+};
+
+module.exports = { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, obtenerEventosActivos };
