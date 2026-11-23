@@ -51,8 +51,14 @@ export default function EventForm({ evento, onSave, onCancel }) {
   useEffect(() => {
     if (evento) {
       setNombre(evento.nombre || '');
-      setFechaInicio(evento.fecha_inicio?.slice(0, 16) || '');
-      setFechaFin(evento.fecha_fin?.slice(0, 16) || '');
+      // Convertir de UTC a hora local de Chile para el input datetime-local
+      const toLocal = (iso) => {
+        if (!iso) return '';
+        const d = new Date(iso);
+        return d.toLocaleString('sv-SE', { timeZone: 'America/Santiago' }).replace(' ', 'T').slice(0, 16);
+      };
+      setFechaInicio(toLocal(evento.fecha_inicio));
+      setFechaFin(toLocal(evento.fecha_fin));
       setUbicacion(evento.ubicacion || '');
       setTipo(evento.tipo || '');
     }
