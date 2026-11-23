@@ -21,6 +21,11 @@ export default function AdminDashboard() {
   const [vista, setVista] = useState('actividades');
   const [actividadSeleccionada, setActividadSeleccionada] = useState(null);
   const [selectedProspect, setSelectedProspect] = useState(null);
+  const [captadores, setCaptadores] = useState([]);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [assignEvento, setAssignEvento] = useState(null);
+  const [selectedCaptadorId, setSelectedCaptadorId] = useState('');
+  const [assignedCaptadores, setAssignedCaptadores] = useState({});
   const navigate = useNavigate();
 
   const filteredEventos = eventos.filter((e) => {
@@ -39,14 +44,16 @@ export default function AdminDashboard() {
     try {
       const params = new URLSearchParams();
       Object.entries(f).forEach(([k, v]) => { if (v) params.append(k, v); });
-      const [prosRes, evRes, dupRes] = await Promise.all([
+      const [prosRes, evRes, dupRes, capRes] = await Promise.all([
         api.get(`/prospectos?${params.toString()}`),
         api.get('/eventos'),
-        api.get('/prospectos/duplicados')
+        api.get('/prospectos/duplicados'),
+        api.get('/auth/usuarios')
       ]);
       setProspectos(prosRes.data.data || prosRes.data);
       setEventos(evRes.data);
       setDuplicados(dupRes.data);
+      setCaptadores(capRes.data.filter((u) => u.rol === 'CAPTADOR' || u.rol === 'Anfitrion'));
     } catch (err) {
       if (err.response?.status === 401 || err.response?.status === 403) navigate('/admin/login');
     }
@@ -66,6 +73,42 @@ export default function AdminDashboard() {
     setActividadSeleccionada(null);
     setVista('actividades');
     cargarDatos(newFiltros);
+  };
+
+  const abrirAsignar = async (evento) => {
+    setAssignEvento(evento);
+    setShowAssignModal(true);
+    setSelectedCaptadorId('');
+    try {
+      const res = await api.get(`/eventos/${evento.id}/captadores`);
+      setAssignedCaptadores((prev) => ({ ...prev, [evento.id]: res.data }));
+    } catch (err) {
+      setAssignedCaptadores((prev) => ({ ...prev, [evento.id]: [] }));
+    }
+  };
+
+  const asignarCaptador = async () => {
+    if (!selectedCaptadorId || !assignEvento) return;
+    try {
+      await api.post(`/eventos/${assignEvento.id}/asignar`, { usuario_id: selectedCaptadorId });
+      const res = await api.get(`/eventos/${assignEvento.id}/captadores`);
+      setAssignedCaptadores((prev) => ({ ...prev, [assignEvento.id]: res.data }));
+      setSelectedCaptadorId('');
+      cargarDatos();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Error al asignar captador');
+    }
+  };
+
+  const desasignarCaptador = async (eventoId, userId) => {
+    try {
+      await api.delete(`/eventos/${eventoId}/asignar/${userId}`);
+      const res = await api.get(`/eventos/${eventoId}/captadores`);
+      setAssignedCaptadores((prev) => ({ ...prev, [eventoId]: res.data }));
+      cargarDatos();
+    } catch (err) {
+      alert(err.response?.data?.error || 'Error al desasignar captador');
+    }
   };
 
   const exportarCSV = async () => {
@@ -183,6 +226,49 @@ export default function AdminDashboard() {
 
           {showQR && <QRModal evento={qrEvento} onClose={() => { setShowQR(false); setQrEvento(null); }} />}
 
+          {showAssignModal && assignEvento && (
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }} onClick={() => { setShowAssignModal(false); setAssignEvento(null); }}>
+              <div onClick={(e) => e.stopPropagation()} style={{ background: '#FFFFFF', borderRadius: '4px', padding: '1.5rem', maxWidth: 480, width: '100%', boxShadow: '0 4px 24px rgba(26,26,26,0.12)' }}>
+                <h3 style={{ color: '#1A1A1A', marginBottom: '1rem', fontSize: '1.1rem', fontWeight: 700 }}>Asignar captador a: {assignEvento.nombre}</h3>
+
+                {/* Captadores asignados */}
+                <div style={{ marginBottom: '1rem' }}>
+                  <p style={{ fontSize: '0.85rem', color: '#666666', marginBottom: '0.5rem', fontWeight: 600 }}>Captadores asignados:</p>
+                  {(assignedCaptadores[assignEvento.id] || []).length === 0 ? (
+                    <p style={{ fontSize: '0.85rem', color: '#666666', fontStyle: 'italic' }}>Ninguno asignado</p>
+                  ) : (
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      {(assignedCaptadores[assignEvento.id] || []).map((c) => (
+                        <span key={c.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', background: '#EEEEEE', padding: '0.35rem 0.75rem', borderRadius: '100px', fontSize: '0.85rem' }}>
+                          {c.nombre_completo}
+                          <button type="button" onClick={() => desasignarCaptador(assignEvento.id, c.id)} style={{ background: 'transparent', border: 'none', color: '#D50032', cursor: 'pointer', fontSize: '0.9rem', padding: 0, lineHeight: 1 }} aria-label={`Desasignar ${c.nombre_completo}`}>✕</button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Selector de captador */}
+                <div className="form-group">
+                  <label>Seleccionar captador</label>
+                  <select value={selectedCaptadorId} onChange={(e) => setSelectedCaptadorId(e.target.value)}>
+                    <option value="">Seleccione un captador</option>
+                    {captadores
+                      .filter((c) => !(assignedCaptadores[assignEvento.id] || []).some((a) => a.id === c.id))
+                      .map((c) => (
+                        <option key={c.id} value={c.id}>{c.nombre_completo} ({c.correo})</option>
+                      ))}
+                  </select>
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                  <button type="button" className="ghost" onClick={() => { setShowAssignModal(false); setAssignEvento(null); }} style={{ height: '36px', fontSize: '0.85rem', padding: '0 1rem' }}>Cerrar</button>
+                  <button type="button" className="primary" onClick={asignarCaptador} disabled={!selectedCaptadorId} style={{ height: '36px', fontSize: '0.85rem', padding: '0 1rem' }}>Asignar</button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="admin-kpi-grid">
             <div className="admin-kpi-card" style={{ background: '#ffffff', border: '1px solid #CCCCCC', borderRadius: '12px', padding: '1.25rem 1.5rem', boxShadow: '0 3px 6px rgba(10,36,69,0.04)', position: 'relative' }}>
               <p style={{ fontSize: '0.8rem', fontWeight: 500, color: '#666666', margin: 0 }}>Total {vista === 'detalle' ? 'en la actividad' : 'inscritos global'}</p>
@@ -244,6 +330,7 @@ export default function AdminDashboard() {
                           <button className="ghost" onClick={() => verProspectos(e)} style={{ fontSize: '0.85rem' }} aria-label="Ver prospectos de la actividad">Ver prospectos</button>
                           <button className="ghost" onClick={() => { setEditingEvent(e); setShowEventForm(true); }} style={{ marginLeft: '0.5rem', fontSize: '0.85rem' }} aria-label="Editar actividad">Editar</button>
                           <button className="ghost" onClick={() => { setQrEvento(e); setShowQR(true); }} style={{ marginLeft: '0.5rem', fontSize: '0.85rem' }} aria-label="Generar código QR">QR</button>
+                          <button className="ghost" onClick={() => abrirAsignar(e)} style={{ marginLeft: '0.5rem', fontSize: '0.85rem' }} aria-label="Asignar captador a la actividad">Asignar</button>
                         </td>
                       </tr>
                     ))}
