@@ -1,15 +1,52 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import api from '../api';
 
 const TIPOS = ['Japan', 'Cafeína', 'Sobremesa', 'Asesoría vocacional', 'Ventana vocacional'];
 
 export default function EventForm({ evento, onSave, onCancel }) {
+  const modalRef = useRef(null);
   const [nombre, setNombre] = useState('');
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
   const [ubicacion, setUbicacion] = useState('');
   const [tipo, setTipo] = useState('');
   const [msg, setMsg] = useState('');
+
+  useEffect(() => {
+    const modal = modalRef.current;
+    if (!modal) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onCancel();
+    };
+    modal.addEventListener('keydown', handleKeyDown);
+
+    const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    first?.focus();
+
+    const trap = (e) => {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    modal.addEventListener('keydown', trap);
+
+    return () => {
+      modal.removeEventListener('keydown', handleKeyDown);
+      modal.removeEventListener('keydown', trap);
+    };
+  }, [onCancel]);
 
   useEffect(() => {
     if (evento) {
@@ -36,7 +73,7 @@ export default function EventForm({ evento, onSave, onCancel }) {
   };
 
   return (
-    <div className="card" style={{ maxWidth: 600 }}>
+    <div ref={modalRef} className="card" style={{ maxWidth: 600, maxHeight: '85vh', overflowY: 'auto' }} tabIndex={-1}>
       <h2>{evento ? 'Editar actividad' : 'Nueva actividad'}</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">

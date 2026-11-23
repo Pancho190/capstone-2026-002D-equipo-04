@@ -169,11 +169,15 @@ export default function AdminDashboard() {
           </div>
 
           {showEventForm && (
-            <EventForm
-              evento={editingEvent}
-              onSave={() => { setShowEventForm(false); setEditingEvent(null); cargarDatos(); }}
-              onCancel={() => { setShowEventForm(false); setEditingEvent(null); }}
-            />
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }} onClick={() => { setShowEventForm(false); setEditingEvent(null); }}>
+              <div onClick={(e) => e.stopPropagation()}>
+                <EventForm
+                  evento={editingEvent}
+                  onSave={() => { setShowEventForm(false); setEditingEvent(null); cargarDatos(); }}
+                  onCancel={() => { setShowEventForm(false); setEditingEvent(null); }}
+                />
+              </div>
+            </div>
           )}
 
           {showQR && <QRModal evento={qrEvento} onClose={() => { setShowQR(false); setQrEvento(null); }} />}
