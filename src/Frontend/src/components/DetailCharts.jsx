@@ -29,7 +29,7 @@ function byAge(prospectos) {
 }
 
 export default function DetailCharts({ prospectos }) {
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
   const regionData = aggregate(prospectos, 'region');
   const escuelaData = prospectos.reduce((acc, p) => {
     const key = p.escuela && p.carrera_interes ? `${p.escuela} - ${p.carrera_interes}` : (p.carrera_interes || p.escuela || 'Sin datos');
@@ -52,7 +52,7 @@ export default function DetailCharts({ prospectos }) {
       <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
         <div className="card" style={{ flex: 1, minWidth: isMobile ? '100%' : 280, margin: 0, padding: '1rem' }}>
           <h4 style={{ color: '#172b46', marginBottom: '0.5rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: '0.95rem', fontWeight: 600 }}>Por región</h4>
-          <ResponsiveContainer width="100%" height={200}>
+          <ResponsiveContainer width="100%" height={200} minWidth={0}>
             <PieChart>
               <Pie data={regionData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={isMobile ? 50 : 60} label={{ fontSize: 10 }}>
                 {regionData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -65,7 +65,7 @@ export default function DetailCharts({ prospectos }) {
 
         <div className="card" style={{ flex: 1, minWidth: isMobile ? '100%' : 280, margin: 0, padding: '1rem' }}>
           <h4 style={{ color: '#172b46', marginBottom: '0.5rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: '0.95rem', fontWeight: 600 }}>Por género</h4>
-          <ResponsiveContainer width="100%" height={200}>
+          <ResponsiveContainer width="100%" height={200} minWidth={0}>
             <PieChart>
               <Pie data={generoData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={isMobile ? 50 : 60} label={{ fontSize: 10 }}>
                 {generoData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -77,9 +77,9 @@ export default function DetailCharts({ prospectos }) {
         </div>
       </div>
 
-      <div className="card" style={{ marginTop: '1rem', padding: '1rem' }}>
+      <div className="card" style={{ marginTop: '1rem', padding: '1rem', minWidth: 0, boxSizing: 'border-box' }}>
         <h4 style={{ color: '#172b46', marginBottom: '0.5rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: '0.95rem', fontWeight: 600 }}>Por edad</h4>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={200} minWidth={0}>
           <BarChart data={ageData} margin={chartMargin}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
@@ -90,17 +90,19 @@ export default function DetailCharts({ prospectos }) {
         </ResponsiveContainer>
       </div>
 
-      <div className="card" style={{ marginTop: '1rem', padding: '1rem' }}>
+      <div className="card" style={{ marginTop: '1rem', padding: '1rem', minWidth: 0, boxSizing: 'border-box' }}>
         <h4 style={{ color: '#172b46', marginBottom: '0.5rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: '0.95rem', fontWeight: 600 }}>Por carrera y escuela</h4>
-        <ResponsiveContainer width="100%" height={Math.max(isMobile ? 150 : 200, escuelaChartData.length * (isMobile ? 20 : 24))}>
-          <BarChart data={escuelaChartData} layout="vertical" margin={escuelaMargin}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" allowDecimals={false} />
-            <YAxis dataKey="name" type="category" tick={{ fontSize: escuelaTickFontSize }} width={escuelaYAxisWidth} />
-            <Tooltip />
-            <Bar dataKey="value" fill="#0033a0" radius={[0, 4, 4, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        <div style={{ width: '100%', minWidth: 0, overflowX: 'auto' }}>
+          <ResponsiveContainer width="100%" height={Math.max(isMobile ? 150 : 200, escuelaChartData.length * (isMobile ? 20 : 24))} minWidth={0}>
+            <BarChart data={escuelaChartData} layout="vertical" margin={escuelaMargin}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" allowDecimals={false} />
+              <YAxis dataKey="name" type="category" tick={{ fontSize: escuelaTickFontSize }} width={escuelaYAxisWidth} />
+              <Tooltip />
+              <Bar dataKey="value" fill="#0033a0" radius={[0, 4, 4, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );
