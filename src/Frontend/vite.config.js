@@ -10,13 +10,10 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Captura Digital Admisión',
-        short_name: 'Captura',
-        description: 'Registro de prospectos con escaneo de cédula',
-        theme_color: '#1976d2',
-        icons: [
-          { src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml' }
-        ]
+      name: 'Captura Digital Admisión',
+      short_name: 'Captura',
+      description: 'Registro de prospectos con escaneo de cédula',
+      theme_color: '#0033a0'
       }
     })
   ],
