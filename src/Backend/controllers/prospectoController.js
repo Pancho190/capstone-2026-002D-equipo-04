@@ -251,4 +251,19 @@ const obtenerMisProspectos = async (req, res) => {
   }
 };
 
-module.exports = { crearProspecto, obtenerProspectos, exportProspectos, obtenerDuplicados, obtenerMisProspectos };
+const obtenerInscritosPorEvento = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const prospectos = await prisma.prospecto.findMany({
+      where: { evento_id: id },
+      include: { usuario: { select: { nombre_completo: true, correo: true } }, carrera: true, sede: true },
+      orderBy: { fecha_captura: 'desc' }
+    });
+    res.json({ data: prospectos, total: prospectos.length });
+  } catch (error) {
+    console.error('Error al obtener inscritos:', error);
+    res.status(500).json({ error: 'Error interno al obtener inscritos.' });
+  }
+};
+
+module.exports = { crearProspecto, obtenerProspectos, exportProspectos, obtenerDuplicados, obtenerMisProspectos, obtenerInscritosPorEvento };
