@@ -159,7 +159,7 @@ Scrum
 - `docs/fase2-desarrollo/grupales/Evidencias de documentación/inicio-proyecto.md` — Documento de inicio
 - `docs/agile/` — Product Vision, Backlog, Sprint, DoD, retrospectiva
 - `docs/fase2-desarrollo/grupales/Evidencias de documentación/Plan de Pruebas.md` — Plan de pruebas (Jest + Supertest)
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/` — Copia de docs/ para evaluación MICO
+- `docs/fase2-desarrollo/grupales/Evidencias de documentación/` — Copia de docs
 - `docs/fase2-desarrollo/grupales/Evidencias de sistema (Aplicación - Base de datos)/` — Schema Prisma + capturas de pantalla
 
 ---
