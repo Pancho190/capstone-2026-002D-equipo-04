@@ -87,9 +87,16 @@ El frontend quedará en `https://localhost:5173/`.
 `GET /api/prospectos?page=1&limit=20`
 
 ## Panel de administración
-- **URL:** `https://localhost:5173/admin/login`
+- **URL local:** `https://localhost:5173/admin/login`
+- **URL producción:** https://capstone-admision.vercel.app/admin/login
 - **Credenciales iniciales:** `admin@duoc.cl` / `Admin123!`
-- **Funcionalidades:** filtros por fecha/actividad/tipo/mes/día, tabla de prospectos, exportar CSV, CRUD de actividades.
+- **Funcionalidades:** filtros por fecha/actividad/tipo/mes/día/periodo, tabla de prospectos, modal de detalle, gráficos, exportar CSV, CRUD de actividades, detección de duplicados, generación de QR.
+
+## Despliegue en producción
+- **Frontend:** Vercel (https://capstone-admision.vercel.app/)
+- **Backend:** Render (https://capstone-backend-so19.onrender.com/)
+- **Base de datos:** Neon (https://console.neon.tech)
+- **CI/CD:** Auto-deploy desde GitHub (push a main)
 
 ## Despliegue con Docker
 ```bash

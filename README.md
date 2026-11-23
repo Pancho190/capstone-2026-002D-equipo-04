@@ -84,11 +84,17 @@ npm install
 npm run dev -- --host
 ```
 
-### Acceso
+### Acceso local
 - **Formulario público:** `https://localhost:5173/`
 - **Panel admin:** `https://localhost:5173/admin/login`
 - **Backend:** `http://localhost:3000/`
-- **pgAdmin:** `http://localhost:5050/`
+
+### Acceso en producción
+- **Formulario público:** https://capstone-admision.vercel.app/
+- **Panel admin:** https://capstone-admision.vercel.app/admin/login
+- **Backend API:** https://capstone-backend-so19.onrender.com/
+- **Base de datos:** https://console.neon.tech (Neon)
+- **Credenciales admin:** admin@duoc.cl / Admin123!
 
 ## 5. Endpoints de la API
 | Método | Ruta | Descripción | Auth |
