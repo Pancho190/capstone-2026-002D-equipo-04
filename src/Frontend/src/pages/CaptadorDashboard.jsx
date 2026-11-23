@@ -47,6 +47,16 @@ export default function CaptadorDashboard() {
     }
   };
 
+  // Determinar estado de la actividad
+  const getEstadoActividad = (evento) => {
+    const now = new Date();
+    const inicio = new Date(evento.fecha_inicio);
+    const fin = new Date(evento.fecha_fin);
+    if (now < inicio) return { label: 'Próxima', color: '#FFB800', bg: '#FFF8E1' };
+    if (now > fin) return { label: 'Finalizada', color: '#666666', bg: '#EEEEEE' };
+    return { label: 'Activa', color: '#43B02A', bg: '#E8F5E9' };
+  };
+
   const verInscritos = async (evento) => {
     setSelectedEvento(evento);
     setLoadingInscritos(true);
