@@ -157,7 +157,7 @@ export default function AdminDashboard() {
               <button type="button" className="ghost" onClick={() => { setFiltros({ periodo: '', desde: '', hasta: '', evento_id: '', tipo: '', mes: '', dia: '' }); cargarDatos({ periodo: '', desde: '', hasta: '', evento_id: '', tipo: '', mes: '', dia: '' }); }} style={{ width: '100%', fontSize: '13px', padding: '4px 12px', height: '32px' }}>Limpiar filtros</button>
             </div>
             <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-              <DuocMascot size={80} />
+              <DuocMascot size={80} floating={false} />
             </div>
           </div>
         </aside>

@@ -1,10 +1,14 @@
 import { useState } from 'react';
 
-export default function DuocMascot({ size = 60 }) {
+export default function DuocMascot({ size = 60, floating = true }) {
   const [showDialog, setShowDialog] = useState(false);
 
+  const containerStyle = floating
+    ? { position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 999, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }
+    : { display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', position: 'relative' };
+
   return (
-    <div className="duoc-mascot" style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 999, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+    <div className="duoc-mascot" style={containerStyle}>
       {showDialog && (
         <div style={{
           position: 'absolute',
