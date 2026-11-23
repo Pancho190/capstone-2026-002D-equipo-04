@@ -2,7 +2,21 @@
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line
 } from 'recharts';
 
-const COLORS = ['#1A1A1A', '#6dd400', '#d32f2f', '#ed6c02', '#9c27b0', '#00bcd4', '#ff9800', '#795548'];
+const SCHOOL_COLORS = {
+  'Administración y Negocios': '#D50032',
+  'Comunicación': '#E87722',
+  'Construcción': '#C4D600',
+  'Diseño': '#FF585D',
+  'Gastronomía': '#FF585D',
+  'Informática y Telecomunicaciones': '#307FE2',
+  'Ingeniería y Recursos Naturales': '#43B02A',
+  'Salud': '#5BC2E7',
+  'Turismo': '#00A499',
+};
+
+const DUOC_PALETTE = ['#1A1A1A', '#307FE2', '#FFB800', '#43B02A', '#5BC2E7', '#666666', '#D50032', '#00A499', '#E87722', '#C4D600'];
+
+const COLORS = DUOC_PALETTE;
 
 function aggregate(prospectos, key) {
   const map = {};
@@ -44,7 +58,7 @@ export default function ChartsSection({ prospectos }) {
     <div style={{ marginTop: '1.5rem', minWidth: 0 }}>
       {/* Bar horizontal: ancho completo */}
       <div className="card" style={{ width: '100%', margin: '0 0 1rem 0', padding: isMobile ? '0.75rem' : '1rem', minWidth: 0, boxSizing: 'border-box' }}>
-        <h4 style={{ color: '#172b46', marginBottom: '0.5rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: '0.95rem', fontWeight: 600 }}>Prospectos por carrera y escuela</h4>
+        <h4 style={{ color: '#1A1A1A', marginBottom: '0.5rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: '0.95rem', fontWeight: 600 }}>Prospectos por carrera y escuela</h4>
         <div style={{ width: '100%', minWidth: 0, overflowX: 'auto' }}>
           <ResponsiveContainer width="100%" height={escuelaHeight} minWidth={0}>
             <BarChart data={escuelaChartData} layout="vertical" margin={{ top: 5, right: isMobile ? 10 : 20, left: escuelaLeftMargin, bottom: 5 }}>
@@ -52,7 +66,13 @@ export default function ChartsSection({ prospectos }) {
               <XAxis type="number" allowDecimals={false} tick={{ fontSize: isMobile ? 10 : 11 }} />
               <YAxis dataKey="name" type="category" tick={{ fontSize: escuelaTickFontSize }} width={escuelaYAxisWidth} />
               <Tooltip />
-              <Bar dataKey="value" fill="#1A1A1A" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                {escuelaChartData.map((entry, index) => {
+                  const school = entry.name.split(' - ')[0];
+                  const color = SCHOOL_COLORS[school] || DUOC_PALETTE[index % DUOC_PALETTE.length];
+                  return <Cell key={`cell-${index}`} fill={color} />;
+                })}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -61,7 +81,7 @@ export default function ChartsSection({ prospectos }) {
       <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', minWidth: 0 }}>
         {/* Pie: por región */}
         <div className="card" style={{ flex: 1, minWidth: isMobile ? '100%' : 280, margin: 0, padding: '1rem', boxSizing: 'border-box' }}>
-          <h4 style={{ color: '#172b46', marginBottom: '0.5rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: '0.95rem', fontWeight: 600 }}>Prospectos por región</h4>
+          <h4 style={{ color: '#1A1A1A', marginBottom: '0.5rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: '0.95rem', fontWeight: 600 }}>Prospectos por región</h4>
           <ResponsiveContainer width="100%" height={220} minWidth={0}>
             <PieChart>
               <Pie data={regionData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={isMobile ? 60 : 70} label={{ fontSize: 11 }}>
@@ -75,14 +95,14 @@ export default function ChartsSection({ prospectos }) {
 
         {/* Line: por fecha */}
         <div className="card" style={{ flex: 1, minWidth: isMobile ? '100%' : 280, margin: 0, padding: '1rem', boxSizing: 'border-box' }}>
-          <h4 style={{ color: '#172b46', marginBottom: '0.5rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: '0.95rem', fontWeight: 600 }}>Prospectos por fecha de captura</h4>
+          <h4 style={{ color: '#1A1A1A', marginBottom: '0.5rem', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: '0.95rem', fontWeight: 600 }}>Prospectos por fecha de captura</h4>
           <ResponsiveContainer width="100%" height={220} minWidth={0}>
             <LineChart data={dateData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" tick={{ fontSize: 10 }} />
               <YAxis allowDecimals={false} />
               <Tooltip />
-              <Line type="monotone" dataKey="value" stroke="#6dd400" strokeWidth={2} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="value" stroke="#FFB800" strokeWidth={2} dot={{ r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
