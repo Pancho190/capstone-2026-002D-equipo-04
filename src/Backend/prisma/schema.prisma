@@ -16,6 +16,7 @@ model UsuarioAdmision {
   rol             String      @default("Anfitrion")
   fecha_creacion  DateTime    @default(now())
   prospectos      Prospecto[]
+  eventosAsignados EventoCaptador[]
 }
 
 model Sede {
@@ -40,6 +41,17 @@ model Evento {
   ubicacion    String
   tipo         String
   prospectos   Prospecto[]
+  captadores   EventoCaptador[]
+}
+
+model EventoCaptador {
+  id          String          @id @default(uuid())
+  evento_id   String
+  evento      Evento          @relation(fields: [evento_id], references: [id])
+  usuario_id  String
+  usuario     UsuarioAdmision @relation(fields: [usuario_id], references: [id])
+  fecha_asignacion DateTime   @default(now())
+  @@unique([evento_id, usuario_id])
 }
 
 model Prospecto {
