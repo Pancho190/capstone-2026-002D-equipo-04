@@ -124,7 +124,7 @@ export default function ProspectoForm() {
 
   return (
     <div className="card">
-      <h2 style={{ marginBottom: '0.25rem', fontFamily: 'Lato, sans-serif', fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-primary)', overflowWrap: 'break-word', minWidth: 0 }}>Capturar prospecto</h2>
+      <h2 style={{ marginBottom: '0.25rem', fontFamily: 'var(--font-body)', fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-primary)', overflowWrap: 'break-word', minWidth: 0 }}>Capturar prospecto</h2>
       <p style={{ fontSize: '0.9rem', color: 'var(--color-muted)', marginBottom: '1.25rem' }}>Completa tus datos o escanea tu cédula para autocompletar.</p>
       <button type="button" className="primary" onClick={() => setShowScanner(true)} style={{ marginBottom: '1.25rem', height: '52px', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }} aria-label="Escanear cedula de identidad">
         Escanear cédula
@@ -136,7 +136,7 @@ export default function ProspectoForm() {
       )}
       <form onSubmit={handleSubmit}>
         <p className="section-title">Datos personales</p>
-        <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Ingresa la informacion tal como aparece en la cedula.</p>
+        <p style={{ fontSize: '0.85rem', color: 'var(--color-muted)', marginBottom: '0.75rem' }}>Ingresa la informacion tal como aparece en la cedula.</p>
         <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="rut">RUT</label>
@@ -183,7 +183,7 @@ export default function ProspectoForm() {
           </div>
         </div>
         <p className="section-title">Ubicación</p>
-        <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Selecciona tu region y comuna.</p>
+        <p style={{ fontSize: '0.85rem', color: 'var(--color-muted)', marginBottom: '0.75rem' }}>Selecciona tu region y comuna.</p>
         <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="region">Región</label>
@@ -205,7 +205,7 @@ export default function ProspectoForm() {
           </div>
         </div>
         <p className="section-title">Interés académico</p>
-        <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Conoce sus motivaciones y preferencias de estudio.</p>
+        <p style={{ fontSize: '0.85rem', color: 'var(--color-muted)', marginBottom: '0.75rem' }}>Conoce sus motivaciones y preferencias de estudio.</p>
         <div className="form-row">
           <div className="form-group col-md-12">
             <label htmlFor="identificacion">De las siguientes afirmaciones, ¿Con cuál te sientes más identificado?</label>
@@ -250,7 +250,7 @@ export default function ProspectoForm() {
           </div>
         </div>
         <p className="section-title">Contacto</p>
-        <p style={{ fontSize: '0.85rem', color: '#4a5568', marginBottom: '0.75rem' }}>Indica los datos y los canales autorizados de contacto.</p>
+        <p style={{ fontSize: '0.85rem', color: 'var(--color-muted)', marginBottom: '0.75rem' }}>Indica los datos y los canales autorizados de contacto.</p>
         <div className="form-row">
           <div className="form-group col-md-6">
             <label htmlFor="email">Email</label>

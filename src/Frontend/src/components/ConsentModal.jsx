@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+﻿import { useEffect, useRef } from 'react';
 
 export default function ConsentModal({ onClose }) {
   const modalRef = useRef(null);
@@ -44,18 +44,18 @@ export default function ConsentModal({ onClose }) {
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0, 51, 160, 0.4)', backdropFilter: 'blur(2px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
       <div ref={modalRef} style={{ background: '#fff', borderRadius: 8, maxWidth: 560, width: '100%', maxHeight: '85vh', display: 'flex', flexDirection: 'column', boxShadow: '0 8px 32px rgba(0, 0, 51, 0.15)' }}>
         {/* Header */}
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '2px solid #0033a0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ fontFamily: 'Lato, sans-serif', fontWeight: 700, color: '#0033a0', fontSize: '1.15rem', margin: 0 }}>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '2px solid #1A1A1A', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, color: '#1A1A1A', fontSize: '1.15rem', margin: 0 }}>
             Consentimiento Informado
           </h3>
-          <button type="button" onClick={onClose} aria-label="Cerrar" style={{ background: 'transparent', color: '#4a5568', fontSize: '1.25rem', padding: '0.25rem 0.5rem', lineHeight: 1, border: 'none', cursor: 'pointer' }}>
+          <button type="button" onClick={onClose} aria-label="Cerrar" style={{ background: 'transparent', color: '#666666', fontSize: '1.25rem', padding: '0.25rem 0.5rem', lineHeight: 1, border: 'none', cursor: 'pointer' }}>
             ✕
           </button>
         </div>
 
         {/* Content */}
         <div style={{ padding: '1.25rem 1.5rem', overflowY: 'auto', flex: 1, fontSize: '0.9rem', lineHeight: 1.7, color: '#212529' }}>
-          <h4 style={{ fontFamily: 'Lato, sans-serif', fontWeight: 700, color: '#0033a0', fontSize: '1rem', marginBottom: '0.5rem', marginTop: '0.75rem' }}>
+          <h4 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, color: '#1A1A1A', fontSize: '1rem', marginBottom: '0.5rem', marginTop: '0.75rem' }}>
             ¿Qué significa sí, autorizo?
           </h4>
           <p style={{ marginBottom: '0.75rem' }}>
@@ -68,7 +68,7 @@ export default function ConsentModal({ onClose }) {
             <li style={{ marginBottom: '0.4rem' }}>La entrega de esta autorización es voluntaria, y su rechazo no afectará otros derechos o servicios a los que usted pueda acceder.</li>
           </ul>
 
-          <h4 style={{ fontFamily: 'Lato, sans-serif', fontWeight: 700, color: '#0033a0', fontSize: '1rem', marginBottom: '0.5rem', marginTop: '1rem' }}>
+          <h4 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, color: '#1A1A1A', fontSize: '1rem', marginBottom: '0.5rem', marginTop: '1rem' }}>
             ¿Quién puede acceder a sus datos?
           </h4>
           <p style={{ marginBottom: '0.75rem' }}>
@@ -79,7 +79,7 @@ export default function ConsentModal({ onClose }) {
             <li style={{ marginBottom: '0.4rem' }}>Obligaciones legales: Cuando así lo exija una ley o una orden judicial debidamente emitida por los Tribunales de Justicia o por la autoridad competente.</li>
           </ul>
 
-          <h4 style={{ fontFamily: 'Lato, sans-serif', fontWeight: 700, color: '#0033a0', fontSize: '1rem', marginBottom: '0.5rem', marginTop: '1rem' }}>
+          <h4 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, color: '#1A1A1A', fontSize: '1rem', marginBottom: '0.5rem', marginTop: '1rem' }}>
             ¿Cuáles son sus derechos?
           </h4>
           <p style={{ marginBottom: '0.75rem' }}>
@@ -95,7 +95,7 @@ export default function ConsentModal({ onClose }) {
           <p style={{ marginBottom: '0.75rem' }}>
             Para ejercer estos derechos, deberá comunicarse con el/la Delegado/a de Protección de Datos de Duoc UC, al correo electrónico <strong>gobiernodedatos@duoc.cl</strong>, quien atenderá su solicitud conforme a los plazos y requisitos establecidos por la normativa vigente.
           </p>
-          <p style={{ marginBottom: '0.5rem', fontWeight: 700, color: '#0033a0' }}>
+          <p style={{ marginBottom: '0.5rem', fontWeight: 700, color: '#1A1A1A' }}>
             Declaro haber leído y comprendido el contenido del presente consentimiento informado y otorgo mi autorización para el tratamiento de mis datos personales conforme a lo aquí señalado.
           </p>
         </div>

@@ -1,8 +1,8 @@
-import {
+﻿import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LineChart, Line
 } from 'recharts';
 
-const COLORS = ['#0033a0', '#6dd400', '#d32f2f', '#ed6c02', '#9c27b0', '#00bcd4', '#ff9800', '#795548'];
+const COLORS = ['#1A1A1A', '#6dd400', '#d32f2f', '#ed6c02', '#9c27b0', '#00bcd4', '#ff9800', '#795548'];
 
 function aggregate(prospectos, key) {
   const map = {};
@@ -52,7 +52,7 @@ export default function ChartsSection({ prospectos }) {
               <XAxis type="number" allowDecimals={false} tick={{ fontSize: isMobile ? 10 : 11 }} />
               <YAxis dataKey="name" type="category" tick={{ fontSize: escuelaTickFontSize }} width={escuelaYAxisWidth} />
               <Tooltip />
-              <Bar dataKey="value" fill="#0033a0" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="value" fill="#1A1A1A" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

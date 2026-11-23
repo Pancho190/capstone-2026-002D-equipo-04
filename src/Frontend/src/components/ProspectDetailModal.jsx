@@ -75,14 +75,14 @@ export default function ProspectDetailModal({ prospecto, onClose }) {
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
       <div ref={modalRef} style={{ background: 'white', borderRadius: 8, padding: '1.5rem', maxWidth: 560, width: '100%', maxHeight: '85vh', overflowY: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-          <h3 style={{ fontFamily: 'Lato, sans-serif', color: '#0033a0', margin: 0 }}>Detalle del prospecto</h3>
-          <button type="button" onClick={onClose} style={{ background: 'transparent', border: 'none', fontSize: '1.25rem', cursor: 'pointer', color: '#4a5568' }}>✕</button>
+          <h3 style={{ fontFamily: 'var(--font-body)', color: '#1A1A1A', margin: 0 }}>Detalle del prospecto</h3>
+          <button type="button" onClick={onClose} style={{ background: 'transparent', border: 'none', fontSize: '1.25rem', cursor: 'pointer', color: '#666666' }}>✕</button>
         </div>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
           <tbody>
             {fields.map((f) => (
               <tr key={f.label} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                <td style={{ padding: '0.5rem', fontWeight: 700, color: '#0033a0', width: '40%' }}>{f.label}</td>
+                <td style={{ padding: '0.5rem', fontWeight: 700, color: '#1A1A1A', width: '40%' }}>{f.label}</td>
                 <td style={{ padding: '0.5rem' }}>{f.value || '-'}</td>
               </tr>
             ))}

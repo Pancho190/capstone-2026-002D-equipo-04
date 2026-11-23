@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import QRCode from 'qrcode';
 
 export default function QRModal({ evento, onClose }) {
@@ -27,8 +27,8 @@ export default function QRModal({ evento, onClose }) {
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
       <div style={{ background: 'white', borderRadius: 8, padding: '1.5rem', maxWidth: 320, width: '100%', textAlign: 'center' }}>
-        <h3 style={{ marginBottom: '0.75rem', fontFamily: 'Lato, sans-serif', color: '#0033a0' }}>QR de actividad</h3>
-        <p style={{ fontSize: '0.9rem', marginBottom: '1rem', color: '#4a5568' }}>{evento.nombre}</p>
+        <h3 style={{ marginBottom: '0.75rem', fontFamily: 'var(--font-body)', color: '#1A1A1A' }}>QR de actividad</h3>
+        <p style={{ fontSize: '0.9rem', marginBottom: '1rem', color: '#666666' }}>{evento.nombre}</p>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <canvas ref={canvasRef} style={{ margin: '0 auto', display: 'block' }} />
         <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', justifyContent: 'center' }}>
