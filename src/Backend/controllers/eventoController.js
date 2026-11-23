@@ -95,4 +95,19 @@ const obtenerEventosActivos = async (req, res) => {
   }
 };
 
-module.exports = { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, obtenerEventosActivos };
+const obtenerMisEventos = async (req, res) => {
+  try {
+    const usuario_id = req.usuario.id;
+    const asignaciones = await prisma.eventoCaptador.findMany({
+      where: { usuario_id },
+      include: { evento: true }
+    });
+    const eventos = asignaciones.map((a) => a.evento);
+    res.json(eventos);
+  } catch (error) {
+    console.error('Error al obtener mis eventos:', error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+};
+
+module.exports = { crearEvento, obtenerEventos, obtenerEvento, actualizarEvento, obtenerEventosActivos, obtenerMisEventos };
