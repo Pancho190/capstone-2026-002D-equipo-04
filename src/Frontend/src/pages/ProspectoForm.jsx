@@ -2,6 +2,7 @@
 import api from '../api';
 import { addPending, syncPending, getPending } from '../offline';
 import ConsentModal from '../components/ConsentModal';
+import DuocMascot from '../components/DuocMascot';
 const Scanner = lazy(() => import('../components/Scanner'));
 import { escuelas, carrerasPorEscuela, sedes } from '../data/duoc';
 import { regiones, comunasPorRegion } from '../data/chile';
@@ -289,6 +290,9 @@ export default function ProspectoForm() {
           {loading ? 'Enviando...' : 'Enviar formulario'}
         </button>
       </form>
+      <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+        <DuocMascot size={70} />
+      </div>
       {msg && <p className={`msg ${msgType}`} role="status" aria-live="polite">{msg}</p>}
       {pendingCount > 0 && <p className="msg info">Pendientes de sincronizar: {pendingCount}</p>}
     </div>
