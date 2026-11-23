@@ -88,12 +88,10 @@ export default function AdminDashboard() {
     <div style={{ minHeight: '100vh', background: '#f0f2f5', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
       <header className="admin-header" style={{ background: '#ffffff', borderBottom: '1px solid #e4eaf1', boxShadow: '0 1px 3px rgba(10,36,69,0.04)' }}>
         <div>
-          <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#63748a', letterSpacing: '0' }}>Vista general</span>
           <h1 style={{ fontSize: '1.5rem', margin: 0, fontWeight: 700, color: '#172b46' }}>Resultados de actividades</h1>
           <span style={{ fontSize: '0.8rem', color: '#63748a' }}>Consulta las actividades y accede a sus prospectos.</span>
         </div>
         <div className="admin-header-actions">
-          <span style={{ fontSize: '0.8rem', fontWeight: 500, color: '#63748a', background: '#e8eef6', padding: '0.35rem 0.75rem', borderRadius: '15px' }}>Datos de ejemplo</span>
           <button onClick={() => { localStorage.removeItem('token'); navigate('/admin/login'); }} className="ghost" style={{ color: '#172b46', border: '1px solid #e4eaf1', background: '#ffffff', height: '36px', fontSize: '0.85rem', padding: '0 1rem' }}>
             Cerrar sesión
           </button>
