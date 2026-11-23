@@ -1,10 +1,11 @@
-const express = require('express');
+﻿const express = require('express');
 const router = express.Router();
-const { crearProspecto, obtenerProspectos, exportProspectos, obtenerDuplicados } = require('../controllers/prospectoController');
+const { crearProspecto, obtenerProspectos, exportProspectos, obtenerDuplicados, obtenerMisProspectos } = require('../controllers/prospectoController');
 const { verificarToken, verificarAdmin } = require('../middlewares/authMiddleware'); // <- Sin .default
 
 router.post('/', crearProspecto);
 router.get('/', verificarToken, obtenerProspectos);
+router.get('/mis', verificarToken, obtenerMisProspectos);
 router.get('/export', verificarToken, verificarAdmin, exportProspectos);
 router.get('/duplicados', verificarToken, verificarAdmin, obtenerDuplicados);
 
