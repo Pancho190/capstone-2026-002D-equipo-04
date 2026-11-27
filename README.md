@@ -13,45 +13,52 @@ Plataforma web progresiva (PWA) offline-first para la captura digital de prospec
 ## 3. Estructura del proyecto
 ```
 capstone-2026-002D-equipo-04/
-├── src/
-│   ├── Backend/
-│   │   ├── controllers/       # Lógica de negocio
-│   │   ├── middlewares/       # Auth JWT
-│   │   ├── routes/            # Rutas de la API
-│   │   ├── prisma/            # Schema y migraciones
-│   │   ├── tests/             # Tests con Jest
-│   │   └── server.js          # Entry point
-│   └── Frontend/
-│       ├── src/
-│       │   ├── components/    # Scanner, ConsentModal, EventForm, QRModal, ActivityChart, ChartsSection, DetailCharts, ProspectDetailModal, DuocMascot
-│       │   ├── pages/         # ProspectoForm, AdminLogin, AdminDashboard, CaptadorDashboard
-│       │   ├── data/          # Escuelas, sedes, regiones
-│       │   └── offline.js     # Almacenamiento offline
-│       └── vite.config.js     # Config Vite + PWA + HTTPS
-├── docker/
-│   ├── docker-compose.yml
-│   └── .env.example
-└── docs/
-    ├── modelo-datos.md
-    ├── manual-tecnico.md
-    ├── requisitos-no-funcionales.md
-    ├── uml-casos-uso.md
-    ├── inicio-proyecto.md
-    └── agile/                 # Product Vision, Backlog, Sprint, DoD, retrospectiva
+├── Fase 1/
+│   ├── Evidencias Individuales/
+│   └── Evidencias Grupales/
+├── Fase 2/
+│   ├── Evidencias Individuales/
+│   ├── Evidencias Grupales/
+│   └── Evidencias Proyecto/
+│       ├── Presentación Proyecto/
+│       ├── Evidencias de documentación/
+│       │   ├── agile/
+│       │   ├── inicio-proyecto.md
+│       │   ├── manual-tecnico.md
+│       │   ├── modelo-datos.md
+│       │   ├── Plan de Pruebas.md
+│       │   ├── requisitos-no-funcionales.md
+│       │   ├── uml-casos-uso.md
+│       │   ├── uml-clases.md
+│       │   ├── uml-componentes.md
+│       │   └── uml-secuencia.md
+│       ├── Evidencias de sistema/
+│       │   └── schema-prisma.md
+│       └── Aplicación (código fuente del proyecto- frontend-backend)/
+│           ├── src/
+│           │   ├── Backend/
+│           │   └── Frontend/
+│           └── docker/
+│               ├── docker-compose.yml
+│               └── .env.example
+├── Fase 3/
+│   ├── Evidencias Individuales/
+│   └── Evidencias Grupales/
+└── README.md
 ```
 
 ## 4. Instrucciones para ejecutar el proyecto localmente
 
 ### Variables de entorno
 ```bash
-cp docker/.env.example src/Backend/.env
+cp "Fase 2/Evidencias Proyecto/Aplicación (código fuente del proyecto- frontend-backend)/docker/.env.example" "Fase 2/Evidencias Proyecto/Aplicación (código fuente del proyecto- frontend-backend)/src/Backend/.env"
 # Completar JWT_SECRET y otros valores
 ```
 
 ### Opción A: Base de datos en la nube (Neon) — recomendado para equipo
 ```bash
-# 1. Configurar .env con la URL de Neon (ver docker/.env.example)
-cd src/Backend
+# 1. Configurar .env con la URL de Neon
+cd "Fase 2/Evidencias Proyecto/Aplicación (código fuente del proyecto- frontend-backend)/src/Backend"
 npm install
 npx prisma generate
 npx prisma db push
@@ -59,7 +66,7 @@ npm run seed
 npm run dev
 
 # 2. Frontend (en otra terminal)
-cd ../src/Frontend
+cd "../Frontend"
 npm install
 npm run dev -- --host
 ```
@@ -67,11 +74,11 @@ npm run dev -- --host
 ### Opción B: Base de datos local (Docker)
 ```bash
 # 1. Base de datos
-cd docker
+cd "Fase 2/Evidencias Proyecto/Aplicación (código fuente del proyecto- frontend-backend)/docker"
 docker compose --profile local-db up -d
 
 # 2. Backend
-cd ../src/Backend
+cd "../src/Backend"
 npm install
 npx prisma generate
 npx prisma db push
@@ -79,7 +86,7 @@ npm run seed
 npm run dev
 
 # 3. Frontend (en otra terminal)
-cd ../src/Frontend
+cd "../Frontend"
 npm install
 npm run dev -- --host
 ```
@@ -127,7 +134,7 @@ El filtro `periodo` corresponde al año de captación + 1 (ej: datos capturados 
 
 ## 6. Testing
 ```bash
-cd src/Backend
+cd "Fase 2/Evidencias Proyecto/Aplicación (código fuente del proyecto- frontend-backend)/src/Backend"
 npm test
 ```
 
@@ -149,18 +156,17 @@ Scrum
 - **Panel admin:** Rutas protegidas por rol ADMIN. Incluye filtros (fecha, actividad, tipo, mes, día, periodo), tabla de prospectos, modal de detalle, gráficos (región, género, edad, carrera/escuela), exportación CSV, QR, CRUD de actividades, detección de duplicados.
 
 ## 10. Documentación
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/modelo-datos.md` — Modelo de datos (ERD)
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/manual-tecnico.md` — Manual de instalación y despliegue
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/requisitos-no-funcionales.md` — RNF
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-casos-uso.md` — Diagrama UML (Casos de uso)
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-clases.md` — Diagrama UML (Clases)
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-secuencia.md` — Diagrama UML (Secuencia)
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/uml-componentes.md` — Diagrama UML (Componentes)
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/inicio-proyecto.md` — Documento de inicio
-- `docs/agile/` — Product Vision, Backlog, Sprint, DoD, retrospectiva
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/Plan de Pruebas.md` — Plan de pruebas (Jest + Supertest)
-- `docs/fase2-desarrollo/grupales/Evidencias de documentación/` — Copia de docs
-- `docs/fase2-desarrollo/grupales/Evidencias de sistema (Aplicación - Base de datos)/` — Schema Prisma + capturas de pantalla
+- `Fase 2/Evidencias Proyecto/Evidencias de documentación/modelo-datos.md` — Modelo de datos (ERD)
+- `Fase 2/Evidencias Proyecto/Evidencias de documentación/manual-tecnico.md` — Manual de instalación y despliegue
+- `Fase 2/Evidencias Proyecto/Evidencias de documentación/requisitos-no-funcionales.md` — RNF
+- `Fase 2/Evidencias Proyecto/Evidencias de documentación/uml-casos-uso.md` — Diagrama UML (Casos de uso)
+- `Fase 2/Evidencias Proyecto/Evidencias de documentación/uml-clases.md` — Diagrama UML (Clases)
+- `Fase 2/Evidencias Proyecto/Evidencias de documentación/uml-secuencia.md` — Diagrama UML (Secuencia)
+- `Fase 2/Evidencias Proyecto/Evidencias de documentación/uml-componentes.md` — Diagrama UML (Componentes)
+- `Fase 2/Evidencias Proyecto/Evidencias de documentación/inicio-proyecto.md` — Documento de inicio
+- `Fase 2/Evidencias Proyecto/Evidencias de documentación/agile/` — Product Vision, Backlog, Sprint, DoD, retrospectiva
+- `Fase 2/Evidencias Proyecto/Evidencias de documentación/Plan de Pruebas.md` — Plan de pruebas (Jest + Supertest)
+- `Fase 2/Evidencias Proyecto/Evidencias de sistema/` — Schema Prisma + capturas de pantalla
 
 ---
 ### Sección de innovación
