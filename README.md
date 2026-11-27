@@ -34,7 +34,7 @@ capstone-2026-002D-equipo-04/
 │       │   └── uml-secuencia.md
 │       ├── Evidencias de sistema/
 │       │   └── schema-prisma.md
-│       └── Aplicación (código fuente del proyecto- frontend-backend)/
+│       └── Aplicacion/
 │           ├── src/
 │           │   ├── Backend/
 │           │   └── Frontend/
@@ -51,14 +51,14 @@ capstone-2026-002D-equipo-04/
 
 ### Variables de entorno
 ```bash
-cp "Fase 2/Evidencias Proyecto/Aplicación (código fuente del proyecto- frontend-backend)/docker/.env.example" "Fase 2/Evidencias Proyecto/Aplicación (código fuente del proyecto- frontend-backend)/src/Backend/.env"
+cp "Fase 2/Evidencias Proyecto/Aplicacion/docker/.env.example" "Fase 2/Evidencias Proyecto/Aplicacion/src/Backend/.env"
 # Completar JWT_SECRET y otros valores
 ```
 
 ### Opción A: Base de datos en la nube (Neon) — recomendado para equipo
 ```bash
 # 1. Configurar .env con la URL de Neon
-cd "Fase 2/Evidencias Proyecto/Aplicación (código fuente del proyecto- frontend-backend)/src/Backend"
+cd "Fase 2/Evidencias Proyecto/Aplicacion/src/Backend"
 npm install
 npx prisma generate
 npx prisma db push
@@ -74,7 +74,7 @@ npm run dev -- --host
 ### Opción B: Base de datos local (Docker)
 ```bash
 # 1. Base de datos
-cd "Fase 2/Evidencias Proyecto/Aplicación (código fuente del proyecto- frontend-backend)/docker"
+cd "Fase 2/Evidencias Proyecto/Aplicacion/docker"
 docker compose --profile local-db up -d
 
 # 2. Backend
@@ -134,7 +134,7 @@ El filtro `periodo` corresponde al año de captación + 1 (ej: datos capturados 
 
 ## 6. Testing
 ```bash
-cd "Fase 2/Evidencias Proyecto/Aplicación (código fuente del proyecto- frontend-backend)/src/Backend"
+cd "Fase 2/Evidencias Proyecto/Aplicacion/src/Backend"
 npm test
 ```
 
