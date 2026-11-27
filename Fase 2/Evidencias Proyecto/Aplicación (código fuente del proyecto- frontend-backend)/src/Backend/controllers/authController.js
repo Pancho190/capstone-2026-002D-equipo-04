@@ -1,0 +1,107 @@
+const prisma = require('../lib/prisma');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+
+// Registrar usuario/anfitrión
+const registrarUsuario = async (req, res) => {
+  try {
+    const { email, password, nombre, rut } = req.body;
+
+    // Validar campos obligatorios
+    if (!email || !password || !nombre || !rut) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios.' });
+    }
+
+    const rutValido = /^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$/.test(rut);
+    if (!rutValido) {
+      return res.status(400).json({ error: 'Formato de RUT inválido.' });
+    }
+
+    // Verificar si el usuario ya existe por su correo
+    const usuarioExistente = await prisma.usuarioAdmision.findUnique({
+      where: { correo: email }
+    });
+
+    if (usuarioExistente) {
+      return res.status(400).json({ error: 'El usuario ya se encuentra registrado.' });
+    }
+
+    // Encriptar contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Crear usuario en la base de datos
+    const nuevoUsuario = await prisma.usuarioAdmision.create({
+      data: {
+        correo: email,
+        password_hash: hashedPassword,
+        nombre_completo: nombre,
+        rol: 'CAPTADOR',
+        rut: rut
+      }
+    });
+
+    res.status(201).json({
+      mensaje: 'Usuario creado exitosamente',
+      usuario: {
+        id: nuevoUsuario.id,
+        correo: nuevoUsuario.correo,
+        nombre: nuevoUsuario.nombre_completo,
+        rut: nuevoUsuario.rut
+      }
+    });
+    } catch (error) {
+    if (error.code === 'P2002') {
+      return res.status(409).json({ error: 'El usuario ya se encuentra registrado.' });
+    }
+    console.error('Error al registrar usuario:', error);
+    res.status(500).json({ error: 'Error interno del servidor al registrar usuario.' });
+  }
+};
+
+// Login de usuario
+const loginUsuario = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const usuario = await prisma.usuarioAdmision.findUnique({ where: { correo: email } });
+    if (!usuario) {
+      return res.status(401).json({ error: 'Credenciales inválidas.' });
+    }
+
+    const passwordValido = await bcrypt.compare(password, usuario.password_hash);
+    if (!passwordValido) {
+      return res.status(401).json({ error: 'Credenciales inválidas.' });
+    }
+
+    const token = jwt.sign(
+      { id: usuario.id, correo: usuario.correo, rol: usuario.rol },
+      process.env.JWT_SECRET,
+      { expiresIn: '12h' }
+    );
+
+    res.json({
+      mensaje: 'Inicio de sesión exitoso',
+      token,
+      usuario: { id: usuario.id, correo: usuario.correo, nombre: usuario.nombre_completo, rol: usuario.rol }
+    });
+  } catch (error) {
+    console.error('Error en login:', error);
+    res.status(500).json({ error: 'Error interno del servidor en el login.' });
+  }
+};
+
+const obtenerUsuarios = async (req, res) => {
+  try {
+    const usuarios = await prisma.usuarioAdmision.findMany({
+      select: { id: true, nombre_completo: true, correo: true, rol: true, rut: true },
+      orderBy: { fecha_creacion: 'desc' }
+    });
+    res.json(usuarios);
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+};
+
+module.exports = { registrarUsuario, loginUsuario, obtenerUsuarios };

@@ -1,0 +1,61 @@
+services:
+  # Base de datos local (opcional si usas Neon en la nube)
+  # Para usar Neon, comenta este servicio y configura DATABASE_URL en .env
+  db:
+    image: postgres:15
+    container_name: capstone_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: admision_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    profiles:
+      - local-db
+
+  # pgAdmin eliminado - Neon tiene dashboard web propio (console.neon.tech)
+  # Si necesitas pgAdmin local, descomenta este bloque
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: capstone_pgadmin
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@duoc.cl
+  #     PGADMIN_DEFAULT_PASSWORD: admin
+  #   ports:
+  #     - "5050:80"
+  #   depends_on:
+  #     - db
+
+  backend:
+    build: ../src/Backend
+    container_name: capstone_backend
+    restart: always
+    env_file: .env
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      # Usar Neon: postgresql://neondb_owner:PASSWORD@ep-xxxxx.c-2.sa-east-1.aws.neon.tech/neondb?sslmode=require
+      # Usar local: postgresql://postgres:root@db:5432/admision_db
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:root@db:5432/admision_db}
+      JWT_SECRET: ${JWT_SECRET:-cambia_esto_por_un_secreto_seguro}
+      FRONTEND_URL: http://localhost:5173
+    volumes:
+      - ../src/Backend:/app
+      - /app/node_modules
+
+  frontend:
+    build: ../src/Frontend
+    container_name: capstone_frontend
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
