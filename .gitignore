@@ -13,3 +13,12 @@ npm-debug.log*
 yarn-debug.log*
 .DS_Store
 Thumbs.db
+
+# Evidencia de IA (no subir)
+AGENTS.md
+PRODUCT.md
+.agents/
+.claude/
+.cursor/
+.devin/
+.opencode/
